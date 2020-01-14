@@ -42,7 +42,7 @@ namespace Terminal.Gui {
 		/// <param name="title">Title.</param>
 		public FrameView (Rect frame, ustring title) : base (frame)
 		{
-			var cFrame = new Rect (1, 1 , frame.Width - 2, frame.Height - 2);
+			var cFrame = new Rect (1, 1 , frame.Width - 1, frame.Height - 1);
 			contentView = new ContentView (cFrame);
 			base.Add (contentView);
 			Title = title;
@@ -58,8 +58,8 @@ namespace Terminal.Gui {
 			contentView = new ContentView () {
 				X = 1,
 				Y = 1,
-				Width = Dim.Fill (2),
-				Height = Dim.Fill (2)
+				Width = Dim.Fill (1),
+				Height = Dim.Fill (1)
 			};
 			base.Add (contentView);
 			Title = title;
@@ -97,7 +97,7 @@ namespace Terminal.Gui {
 			var touched = view.Frame;
 			contentView.Remove (view);
 
-			if (contentView.InternalSubviews.Count < 1)
+			if (contentView.Subviews.Count < 1)
 				this.CanFocus = false;
 		}
 

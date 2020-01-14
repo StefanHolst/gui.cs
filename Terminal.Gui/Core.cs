@@ -245,9 +245,18 @@ namespace Terminal.Gui {
 		/// </summary>
 		public static ConsoleDriver Driver = Application.Driver;
 
-		static IList<View> empty = new List<View> (0).AsReadOnly ();
+        /// <summary>
+        /// Called when a property changes. For now only <see cref="Frame"/>.
+        /// </summary>
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
 
-		// This is null, and allocated on demand.  
+        public event EventHandler<bool> Closing;
+        public void InvokeClosing(object sender, bool edited)
+        {
+            Closing?.Invoke(sender, edited);
+        }
+
+        static IList<View> empty = new List<View> (0).AsReadOnly ();
 		List<View> subviews;
 
 		/// <summary>
@@ -255,11 +264,6 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <value>The subviews.</value>
 		public IList<View> Subviews => subviews == null ? empty : subviews.AsReadOnly ();
-
-		// Internally, we use InternalSubviews rather than subviews, as we do not expect us
-		// to make the same mistakes our users make when they poke at the Subviews.
-		internal IList<View> InternalSubviews => subviews ?? empty;
-
 		internal Rect NeedDisplay { get; private set; } = Rect.Empty;
 
 		// The frame for the object
@@ -296,7 +300,9 @@ namespace Terminal.Gui {
 
 				SetNeedsLayout ();
 				SetNeedsDisplay (frame);
-			}
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Frame)));
+            }
 		}
 
 		/// <summary>
@@ -305,7 +311,7 @@ namespace Terminal.Gui {
 		/// <returns>The enumerator.</returns>
 		public IEnumerator GetEnumerator ()
 		{
-			foreach (var v in InternalSubviews)
+			foreach (var v in Subviews)
 				yield return v;
 		}
 
@@ -333,7 +339,7 @@ namespace Terminal.Gui {
 			get => new Rect (Point.Empty, Frame.Size);
 			set {
 				Frame = new Rect (frame.Location, value.Size);
-			}
+            }
 		}
 
 		Pos x, y;
@@ -551,82 +557,6 @@ namespace Terminal.Gui {
 				if (v.Frame.IntersectsWith (touched))
 					view.SetNeedsDisplay ();
 			}
-		}
-
-		void PerformActionForSubview (View subview, Action<View> action)
-		{
-			if (subviews.Contains (subview)) {
-				action (subview);
-			}
-
-			SetNeedsDisplay ();
-			subview.SetNeedsDisplay ();
-		}
-
-		/// <summary>
-		/// Brings the specified subview to the front so it is drawn on top of any other views.
-		/// </summary>
-		/// <param name="subview">The subview to send to the front</param>
-		/// <remarks>
-		///   <seealso cref="SendSubviewToBack"/>.
-		/// </remarks>
-		public void BringSubviewToFront (View subview)
-		{
-			PerformActionForSubview (subview, x => {
-				subviews.Remove (x);
-				subviews.Add (x);
-			});
-		}
-
-		/// <summary>
-		/// Sends the specified subview to the front so it is the first view drawn
-		/// </summary>
-		/// <param name="subview">The subview to send to the front</param>
-		/// <remarks>
-		///   <seealso cref="BringSubviewToFront(View)"/>.
-		/// </remarks>
-		public void SendSubviewToBack (View subview)
-		{
-			PerformActionForSubview (subview, x => {
-				subviews.Remove (x);
-				subviews.Insert (0, subview);
-			});
-		}
-
-		/// <summary>
-		/// Moves the subview backwards in the hierarchy, only one step
-		/// </summary>
-		/// <param name="subview">The subview to send backwards</param>
-		/// <remarks>
-		/// If you want to send the view all the way to the back use SendSubviewToBack.
-		/// </remarks>
-		public void SendSubviewBackwards (View subview)
-		{
-			PerformActionForSubview (subview, x => {
-				var idx = subviews.IndexOf (x);
-				if (idx > 0) {
-					subviews.Remove (x);
-					subviews.Insert (idx - 1, x);
-				}
-			});
-		}
-
-		/// <summary>
-		/// Moves the subview backwards in the hierarchy, only one step
-		/// </summary>
-		/// <param name="subview">The subview to send backwards</param>
-		/// <remarks>
-		/// If you want to send the view all the way to the back use SendSubviewToBack.
-		/// </remarks>
-		public void BringSubviewForward (View subview)
-		{
-			PerformActionForSubview (subview, x => {
-				var idx = subviews.IndexOf (x);
-				if (idx+1 < subviews.Count) {
-					subviews.Remove (x);
-					subviews.Insert (idx+1, x);
-				}
-			});
 		}
 
 		/// <summary>
@@ -1214,12 +1144,12 @@ namespace Terminal.Gui {
 			}
 		}
 
-		/// <summary>
-		/// This virtual method is invoked when a view starts executing or 
-		/// when the dimensions of the view have changed, for example in 
-		/// response to the container view or terminal resizing.
-		/// </summary>
-		public virtual void LayoutSubviews ()
+        /// <summary>
+        /// This virtual method is invoked when a view starts executing or 
+        /// when the dimensions of the view have changed, for example in 
+        /// response to the container view or terminal resizing.
+        /// </summary>
+        public virtual void LayoutSubviews ()
 		{
 			if (!layoutNeeded)
 				return;
@@ -1228,7 +1158,7 @@ namespace Terminal.Gui {
 			var nodes = new HashSet<View> ();
 			var edges = new HashSet<(View, View)> ();
 
-			foreach (var v in InternalSubviews) {
+			foreach (var v in Subviews) {
 				nodes.Add (v);
 				if (v.LayoutStyle == LayoutStyle.Computed) {
 					if (v.X is Pos.PosView)
@@ -1283,19 +1213,6 @@ namespace Terminal.Gui {
 	///     toplevel and then invoke <see cref="M:Terminal.Gui.Application.Run"/> with the
 	///     new toplevel.
 	///   </para>
-	///   <para>
-	///     TopLevels can also opt-in to more sophisticated initialization 
-	///     by implementing <see cref="ISupportInitialize"/>. When they do 
-	///     so, the <see cref="ISupportInitialize.BeginInit"/> and 
-	///     <see cref="ISupportInitialize.EndInit"/> methods will be called 
-	///     before running the view.
-	///     If first-run-only initialization is preferred, the <see cref="ISupportInitializeNotification"/> 
-	///     can be implemented too, in which case the <see cref="ISupportInitialize"/> 
-	///     methods will only be called if <see cref="ISupportInitializeNotification.IsInitialized"/> 
-	///     is <see langword="false"/>. This allows proper View inheritance hierarchies 
-	///     to override base class layout code optimally by doing so only on first run, 
-	///     instead of on every run.
-	///   </para>
 	/// </remarks>
 	public class Toplevel : View {
 		/// <summary>
@@ -1336,13 +1253,6 @@ namespace Terminal.Gui {
 			get => true;
 		}
 
-		/// <summary>
-		/// Determines whether the <see cref="Toplevel"/> is modal or not. 
-		/// Causes <see cref="ProcessKey(KeyEvent)"/> to propagate keys upwards 
-		/// by default unless set to <see langword="true"/>.
-		/// </summary>
-		public bool Modal { get; set; }
-
 		public override bool ProcessKey (KeyEvent keyEvent)
 		{
 			if (base.ProcessKey (keyEvent))
@@ -1350,7 +1260,7 @@ namespace Terminal.Gui {
 
 			switch (keyEvent.Key) {
 			case Key.ControlC:
-				// TODO: stop current execution of this container
+                // TODO: stop current execution of this container
 				break;
 			case Key.ControlZ:
 				Driver.Suspend ();
@@ -1537,7 +1447,7 @@ namespace Terminal.Gui {
 			var touched = view.Frame;
 			contentView.Remove (view);
 
-			if (contentView.InternalSubviews.Count < 1)
+			if (contentView.Subviews.Count < 1)
 				this.CanFocus = false;
 		}
 
@@ -1810,28 +1720,15 @@ namespace Terminal.Gui {
 
 		static void ProcessKeyEvent (KeyEvent ke)
 		{
-			var chain = toplevels.ToList();
-			foreach (var topLevel in chain) {
-				if (topLevel.ProcessHotKey (ke))
-					return;
-				if (topLevel.Modal)
-					break;
-			}
+			if (Current.ProcessHotKey (ke))
+				return;
 
-			foreach (var topLevel in chain) {
-				if (topLevel.ProcessKey (ke))
-					return;
-				if (topLevel.Modal)
-					break;
-			}
-
-			foreach (var topLevel in chain) {
-				// Process the key normally
-				if (topLevel.ProcessColdKey (ke))
-					return;
-				if (topLevel.Modal)
-					break;
-			}
+			if (Current.ProcessKey (ke))
+				return;
+			
+			// Process the key normally
+			if (Current.ProcessColdKey (ke))
+				return;
 		}
 
 		static View FindDeepestView (View start, int x, int y, out int resx, out int resy)
@@ -1844,13 +1741,13 @@ namespace Terminal.Gui {
 				return null;
 			}
 
-			if (start.InternalSubviews != null){
-				int count = start.InternalSubviews.Count;
+			if (start.Subviews != null){
+				int count = start.Subviews.Count;
 				if (count > 0) {
 					var rx = x - startFrame.X;
 					var ry = y - startFrame.Y;
 					for (int i = count - 1; i >= 0; i--) {
-						View v = start.InternalSubviews [i];
+						View v = start.Subviews [i];
 						if (v.Frame.Contains (rx, ry)) {
 							var deep = FindDeepestView (v, rx, ry, out resx, out resy);
 							if (deep == null)
@@ -1944,14 +1841,6 @@ namespace Terminal.Gui {
 			var rs = new RunState (toplevel);
 
 			Init ();
-			if (toplevel is ISupportInitializeNotification initializableNotification && 
-			    !initializableNotification.IsInitialized) {
-				initializableNotification.BeginInit();
-				initializableNotification.EndInit();
-			} else if (toplevel is ISupportInitialize initializable) {
-				initializable.BeginInit();
-				initializable.EndInit();
-			}
 			toplevels.Push (toplevel);
 			Current = toplevel;
 			Driver.PrepareToRun (MainLoop, ProcessKeyEvent, ProcessMouseEvent);
@@ -2065,8 +1954,8 @@ namespace Terminal.Gui {
 		static void DrawBounds (View v)
 		{
 			v.DrawFrame (v.Frame, padding: 0, fill: false);
-			if (v.InternalSubviews != null && v.InternalSubviews.Count > 0)
-				foreach (var sub in v.InternalSubviews)
+			if (v.Subviews != null && v.Subviews.Count > 0)
+				foreach (var sub in v.Subviews)
 					DrawBounds (sub);
 		}
 

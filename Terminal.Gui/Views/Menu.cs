@@ -349,13 +349,11 @@ namespace Terminal.Gui {
 			action = item.Action;
 		}
 
-		public event EventHandler OnOpenMenu;
 		Menu openMenu;
 		View previousFocused;
 
 		void OpenMenu (int index)
 		{
-			OnOpenMenu?.Invoke(this, null);
 			if (openMenu != null)
 				SuperView.Remove (openMenu);
 			
@@ -365,6 +363,7 @@ namespace Terminal.Gui {
 
 			openMenu = new Menu (this, pos, 1, Menus [index]);
 
+			previousFocused = SuperView.Focused;
 			SuperView.Add (openMenu);
 			SuperView.SetFocus (openMenu);
 		}
@@ -377,7 +376,6 @@ namespace Terminal.Gui {
 			selected = 0;
 			SetNeedsDisplay ();
 
-			previousFocused = SuperView.Focused;
 			OpenMenu (selected);
 		}
 
@@ -400,6 +398,7 @@ namespace Terminal.Gui {
 			SuperView.Remove (openMenu);
 			previousFocused?.SuperView?.SetFocus (previousFocused);
 			openMenu = null;
+            InvokeClosing(this, false);
 		}
 
 		internal void PreviousMenu ()
