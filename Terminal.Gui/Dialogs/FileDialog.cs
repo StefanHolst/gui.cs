@@ -277,8 +277,9 @@ namespace Terminal.Gui {
 		Label nameFieldLabel, message, dirLabel;
 		TextField dirEntry, nameEntry;
 		internal DirListView dirListView;
-
-        public event EventHandler<ustring> SelectionChanged;
+		
+		public delegate void FileDialogEventHandler(FileDialog dialog);
+        public event FileDialogEventHandler SelectionChanged;
 
         public FileDialog (ustring title, ustring prompt, ustring nameFieldLabel, ustring message) : base (title, Driver.Cols - 20, Driver.Rows - 5, null)
 		{
@@ -319,7 +320,6 @@ namespace Terminal.Gui {
 			dirListView.DirectoryChanged = (dir) => dirEntry.Text = dir;
 			dirListView.FileChanged = (file) => {
 				nameEntry.Text = file;
-                SelectionChanged?.Invoke(this, nameEntry.Text);
             };
 
 			this.cancel = new Button ("Cancel");
@@ -333,7 +333,7 @@ namespace Terminal.Gui {
 				IsDefault = true,
 			};
 			this.prompt.Clicked += () => {
-                SelectionChanged?.Invoke(this, nameEntry.Text);
+                SelectionChanged?.Invoke(this);
 				canceled = false;
 				Application.RequestStop ();
 			};
@@ -350,14 +350,6 @@ namespace Terminal.Gui {
 			base.WillPresent ();
 			//SetFocus (nameEntry);
 		}
-
-        public override bool ProcessKey(KeyEvent kb)
-        {
-            if (kb.Key == Key.Enter)
-                SelectionChanged?.Invoke(this, nameEntry.Text);
-
-            return base.ProcessKey(kb);
-        }
 
         /// <summary>
         /// Gets or sets the prompt label for the button displayed to the user
