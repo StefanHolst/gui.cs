@@ -112,10 +112,14 @@ namespace Terminal.Gui {
 		public override string ToString ()
 		{
 			var sb = new StringBuilder ();
+			bool first = true;
 			foreach (var line in lines) 
 			{
+				if (first)
+					first = false;
+				else
+					sb.AppendLine ();
 				sb.Append (ustring.Make(line));
-				sb.AppendLine ();
 			}
 			return sb.ToString ();
 		}
