@@ -119,7 +119,14 @@ namespace Terminal.Gui {
 				int used = 0;
 				for (int i = 0; i < byteLen;) {
 					(var rune, var size) = Utf8.DecodeRune (ustr, i, i - byteLen);
-					var count = Rune.ColumnWidth (rune);
+					var count = 1;
+					try
+					{
+						count = Rune.ColumnWidth(rune);
+					}
+					catch
+					{
+					}
 					if (used+count >= width)
 						break;
 					driver.AddRune (rune);
