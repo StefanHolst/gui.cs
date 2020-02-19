@@ -294,13 +294,15 @@ namespace Terminal.Gui {
 		/// Gets a value indicating whether the Alt key was pressed (real or synthesized)
 		/// </summary>
 		/// <value><c>true</c> if is alternate; otherwise, <c>false</c>.</value>
-		public bool IsAlt => (Key & Key.AltMask) != 0;
+		public bool IsAlt { get; } // => (Key & Key.AltMask) != 0;
 
 		/// <summary>
 		/// Determines whether the value is a control key
 		/// </summary>
 		/// <value><c>true</c> if is ctrl; otherwise, <c>false</c>.</value>
-		public bool IsCtrl => ((uint)Key >= 1) && ((uint)Key <= 26);
+		public bool IsCtrl { get; }// => ((uint)Key >= 1) && ((uint)Key <= 26);
+
+		public bool IsShift { get; }
 
 		/// <summary>
 		///   Constructs a new KeyEvent from the provided Key value - can be a rune cast into a Key value
@@ -308,6 +310,17 @@ namespace Terminal.Gui {
 		public KeyEvent (Key k)
 		{
 			Key = k;
+			IsAlt = (Key & Key.AltMask) != 0;
+			IsCtrl = ((uint) Key >= 1) && ((uint) Key <= 26);
+			IsShift = false;
+		}
+
+		public KeyEvent(Key k, ConsoleModifiers m)
+		{
+			Key = k;
+			IsAlt = m.HasFlag(ConsoleModifiers.Alt);
+			IsCtrl = m.HasFlag(ConsoleModifiers.Control);
+			IsShift = m.HasFlag(ConsoleModifiers.Shift);
 		}
 	}
 

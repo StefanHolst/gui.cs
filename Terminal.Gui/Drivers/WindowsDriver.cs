@@ -536,10 +536,11 @@ namespace Terminal.Gui {
 			case WindowsConsole.EventType.Key:
 				if (inputEvent.KeyEvent.bKeyDown == false)
 					return;
-				var map = MapKey (ToConsoleKeyInfoEx (inputEvent.KeyEvent));
+				var keyInfo = ToConsoleKeyInfoEx(inputEvent.KeyEvent);
+				var map = MapKey (keyInfo);
 				if (inputEvent.KeyEvent.UnicodeChar == 0 && map == (Key)0xffffffff)
 					return;
-				keyHandler (new KeyEvent (map));
+				keyHandler (new KeyEvent (map, keyInfo.consoleKeyInfo.Modifiers));
 				break;
 
 			case WindowsConsole.EventType.Mouse:

@@ -325,7 +325,7 @@ namespace Terminal.Gui {
 				var map = MapKey (consoleKey);
 				if (map == (Key)0xffffffff)
 					return;
-				keyHandler (new KeyEvent (map));
+				keyHandler (new KeyEvent (map, consoleKey.Modifiers));
 			};
 		}
 
