@@ -1261,6 +1261,7 @@ namespace Terminal.Gui {
 			switch (keyEvent.Key) {
 			case Key.ControlC:
                 // TODO: stop current execution of this container
+                Application.RequestStop();
 				break;
 			case Key.ControlZ:
 				Driver.Suspend ();
