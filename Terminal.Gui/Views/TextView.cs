@@ -39,11 +39,25 @@ namespace Terminal.Gui {
 			if (file == null)
 				throw new ArgumentNullException (nameof (file));
 			try {
+				FilePath = file;
 				var stream = File.OpenRead (file);
 			} catch {
 				return false;
 			}
 			LoadStream (File.OpenRead (file));
+			return true;
+		}
+
+		public bool CloseFile ()
+		{
+			if (FilePath == null)
+				throw new ArgumentNullException (nameof (FilePath));
+			try {
+				FilePath = null;
+				lines = new List<List<Rune>> ();
+			} catch {
+				return false;
+			}
 			return true;
 		}
 
@@ -63,6 +77,8 @@ namespace Terminal.Gui {
 		{
 			var lines = new List<List<Rune>> ();
 			int start = 0, i = 0;
+			// BUGBUG: I think this is buggy w.r.t Unicode. content.Length is bytes, and content[i] is bytes
+			// and content[i] == 10 may be the middle of a Rune.
 			for (; i < content.Length; i++) {
 				if (content [i] == 10) {
 					if (i - start > 0)
@@ -113,16 +129,18 @@ namespace Terminal.Gui {
 		{
 			var sb = new StringBuilder ();
 			bool first = true;
-			foreach (var line in lines) 
-			{
+			for (int i = 0; i < lines.Count; i++) {
+				sb.Append (ustring.Make (lines[i]));
 				if (first)
 					first = false;
-				else
+				else if ((i + 1) < lines.Count) {
 					sb.AppendLine ();
-				sb.Append (ustring.Make(line));
+				}
 			}
 			return sb.ToString ();
 		}
+
+		public string FilePath { get; set; }
 
 		/// <summary>
 		/// The number of text lines in the model
@@ -134,7 +152,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <returns>The line.</returns>
 		/// <param name="line">Line number to retrieve.</param>
-		public List<Rune> GetLine (int line) => line < Count ? lines [line]: lines[Count-1];
+		public List<Rune> GetLine (int line) => line < Count ? lines [line] : lines [Count - 1];
 
 		/// <summary>
 		/// Adds a line to the model at the specified position.
@@ -157,11 +175,11 @@ namespace Terminal.Gui {
 	}
 
 	/// <summary>
-	///   Multi-line text editing view
+	///   Multi-line text editing <see cref="View"/>
 	/// </summary>
 	/// <remarks>
 	///   <para>
-	///     The text view provides a multi-line text view.   Users interact
+	///     <see cref="TextView"/> provides a multi-line text editor. Users interact
 	///     with it with the standard Emacs commands for movement or the arrow
 	///     keys. 
 	///   </para> 
@@ -270,6 +288,11 @@ namespace Terminal.Gui {
 		bool selecting;
 		//bool used;
 
+		/// <summary>
+		/// Raised when the <see cref="Text"/> of the <see cref="TextView"/> changes.
+		/// </summary>
+		public Action TextChanged;
+
 #if false
 		/// <summary>
 		///   Changed event, raised when the text has clicked.
@@ -278,10 +301,10 @@ namespace Terminal.Gui {
 		///   Client code can hook up to this event, it is
 		///   raised when the text in the entry changes.
 		/// </remarks>
-		public event EventHandler Changed;
+		public Action Changed;
 #endif
 		/// <summary>
-		///   Public constructor, creates a view on the specified area, with absolute position and size.
+		///   Initalizes a <see cref="TextView"/> on the specified area, with absolute position and size.
 		/// </summary>
 		/// <remarks>
 		/// </remarks>
@@ -291,7 +314,8 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Public constructor, creates a view on the specified area, with dimensions controlled with the X, Y, Width and Height properties.
+		///   Initalizes a <see cref="TextView"/> on the specified area, 
+		///   with dimensions controlled with the X, Y, Width and Height properties.
 		/// </summary>
 		public TextView () : base ()
 		{
@@ -304,11 +328,11 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		///   Sets or gets the text in the entry.
+		///   Sets or gets the text in the <see cref="TextView"/>.
 		/// </summary>
 		/// <remarks>
 		/// </remarks>
-		public ustring Text {
+		public override ustring Text {
 			get {
 				return model.ToString ();
 			}
@@ -316,12 +340,13 @@ namespace Terminal.Gui {
 			set {
 				ResetPosition ();
 				model.LoadString (value);
+				TextChanged?.Invoke ();
 				SetNeedsDisplay ();
 			}
 		}
 
 		/// <summary>
-		/// Loads the contents of the file into the TextView.
+		/// Loads the contents of the file into the  <see cref="TextView"/>.
 		/// </summary>
 		/// <returns><c>true</c>, if file was loaded, <c>false</c> otherwise.</returns>
 		/// <param name="path">Path to the file to load.</param>
@@ -336,7 +361,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Loads the contents of the stream into the TextView.
+		/// Loads the contents of the stream into the  <see cref="TextView"/>.
 		/// </summary>
 		/// <returns><c>true</c>, if stream was loaded, <c>false</c> otherwise.</returns>
 		/// <param name="stream">Stream to load the contents from.</param>
@@ -345,12 +370,24 @@ namespace Terminal.Gui {
 			if (stream == null)
 				throw new ArgumentNullException (nameof (stream));
 			ResetPosition ();
-			model.LoadStream(stream);
+			model.LoadStream (stream);
 			SetNeedsDisplay ();
 		}
 
 		/// <summary>
-		///    The current cursor row.
+		/// Closes the contents of the stream into the  <see cref="TextView"/>.
+		/// </summary>
+		/// <returns><c>true</c>, if stream was closed, <c>false</c> otherwise.</returns>
+		public bool CloseFile ()
+		{
+			ResetPosition ();
+			var res = model.CloseFile ();
+			SetNeedsDisplay ();
+			return res;
+		}
+
+		/// <summary>
+		///    Gets the current cursor row.
 		/// </summary>
 		public int CurrentRow => currentRow;
 
@@ -366,7 +403,7 @@ namespace Terminal.Gui {
 		public override void PositionCursor ()
 		{
 			if (selecting) {
-				var minRow = Math.Min (Math.Max (Math.Min (selectionStartRow, currentRow)-topRow, 0), Frame.Height);
+				var minRow = Math.Min (Math.Max (Math.Min (selectionStartRow, currentRow) - topRow, 0), Frame.Height);
 				var maxRow = Math.Min (Math.Max (Math.Max (selectionStartRow, currentRow) - topRow, 0), Frame.Height);
 
 				SetNeedsDisplay (new Rect (0, minRow, Frame.Width, maxRow));
@@ -399,7 +436,7 @@ namespace Terminal.Gui {
 		bool isReadOnly = false;
 
 		/// <summary>
-		/// Indicates readonly attribute of TextView
+		/// Gets or sets whether the  <see cref="TextView"/> is in read-only mode or not
 		/// </summary>
 		/// <value>Boolean value(Default false)</value>
 		public bool ReadOnly {
@@ -445,12 +482,12 @@ namespace Terminal.Gui {
 			var endCol = (int)(end & 0xffffffff);
 			var line = model.GetLine (startRow);
 
-			if (startRow == maxrow) 
+			if (startRow == maxrow)
 				return StringFromRunes (line.GetRange (startCol, endCol));
 
 			ustring res = StringFromRunes (line.GetRange (startCol, line.Count - startCol));
 
-			for (int row = startRow+1; row < maxrow; row++) {
+			for (int row = startRow + 1; row < maxrow; row++) {
 				res = res + ustring.Make ((Rune)10) + StringFromRunes (model.GetLine (row));
 			}
 			line = model.GetLine (maxrow);
@@ -483,7 +520,7 @@ namespace Terminal.Gui {
 			var line2 = model.GetLine (maxrow);
 			line.AddRange (line2.Skip (endCol));
 			for (int row = startRow + 1; row <= maxrow; row++) {
-				model.RemoveLine (startRow+1);
+				model.RemoveLine (startRow + 1);
 			}
 			if (currentEncoded == end) {
 				currentRow -= maxrow - (startRow);
@@ -493,49 +530,43 @@ namespace Terminal.Gui {
 			SetNeedsDisplay ();
 		}
 
-		/// <summary>
-		/// Redraw the text editor region 
-		/// </summary>
-		/// <param name="region">The region to redraw.</param>
-		public override void Redraw (Rect region)
+		///<inheritdoc/>
+		public override void Redraw (Rect bounds)
 		{
 			ColorNormal ();
 
-			int bottom = region.Bottom;
-			int right = region.Right;
-			for (int row = region.Top; row < bottom; row++) 
-			{
+			int bottom = bounds.Bottom;
+			int right = bounds.Right;
+			for (int row = bounds.Top; row < bottom; row++) {
 				int textLine = topRow + row;
-				if (textLine >= model.Count) 
-				{
+				if (textLine >= model.Count) {
 					ColorNormal ();
-					ClearRegion (region.Left, row, region.Right, row + 1);
+					ClearRegion (bounds.Left, row, bounds.Right, row + 1);
 					continue;
 				}
 				var line = model.GetLine (textLine);
 				int lineRuneCount = line.Count;
-				if (line.Count < region.Left)
-				{
-					ClearRegion (region.Left, row, region.Right, row + 1);
+				if (line.Count < bounds.Left) {
+					ClearRegion (bounds.Left, row, bounds.Right, row + 1);
 					continue;
 				}
 
-				Move (region.Left, row);
-				for (int col = region.Left; col < right; col++) 
-				{
+				Move (bounds.Left, row);
+				for (int col = bounds.Left; col < right; col++) {
 					var lineCol = leftColumn + col;
 					var rune = lineCol >= lineRuneCount ? ' ' : line [lineCol];
 					if (selecting && PointInSelection (col, row))
 						ColorSelection ();
 					else
 						ColorNormal ();
-					
+
 					AddRune (col, row, rune);
 				}
 			}
 			PositionCursor ();
 		}
 
+		///<inheritdoc/>
 		public override bool CanFocus {
 			get => base.CanFocus;
 			set { base.CanFocus = value; }
@@ -608,12 +639,12 @@ namespace Terminal.Gui {
 			for (int i = 1; i < lines.Count; i++)
 				model.AddLine (currentRow + i, lines [i]);
 
-			var last = model.GetLine (currentRow + lines.Count-1);
+			var last = model.GetLine (currentRow + lines.Count - 1);
 			var lastp = last.Count;
 			last.InsertRange (last.Count, rest);
 
 			// Now adjjust column and row positions
-			currentRow += lines.Count-1;
+			currentRow += lines.Count - 1;
 			currentColumn = lastp;
 			if (currentRow - topRow > Frame.Height) {
 				topRow = currentRow - Frame.Height + 1;
@@ -622,7 +653,7 @@ namespace Terminal.Gui {
 			}
 			if (currentColumn < leftColumn)
 				leftColumn = currentColumn;
-			if (currentColumn-leftColumn >= Frame.Width)
+			if (currentColumn - leftColumn >= Frame.Width)
 				leftColumn = currentColumn - Frame.Width + 1;
 			SetNeedsDisplay ();
 		}
@@ -670,7 +701,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Will scroll the view to display the specified row at the top
+		/// Will scroll the <see cref="TextView"/> to display the specified row at the top
 		/// </summary>
 		/// <param name="row">Row that should be displayed at the top, if the value is negative it will be reset to zero</param>
 		public void ScrollTo (int row)
@@ -683,6 +714,7 @@ namespace Terminal.Gui {
 
 		bool lastWasKill;
 
+		///<inheritdoc/>
 		public override bool ProcessKey (KeyEvent kb)
 		{
 			int restCount;
@@ -741,32 +773,12 @@ namespace Terminal.Gui {
 
 			case Key.ControlN:
 			case Key.CursorDown:
-				if (currentRow + 1 < model.Count) {
-					if (columnTrack == -1)
-						columnTrack = currentColumn;
-					currentRow++;
-					if (currentRow >= topRow + Frame.Height) {
-						topRow++;
-						SetNeedsDisplay ();
-					}
-					TrackColumn ();
-					PositionCursor ();
-				}
+				MoveDown ();
 				break;
 
 			case Key.ControlP:
 			case Key.CursorUp:
-				if (currentRow > 0) {
-					if (columnTrack == -1)
-						columnTrack = currentColumn;
-					currentRow--;
-					if (currentRow < topRow) {
-						topRow--;
-						SetNeedsDisplay ();
-					}
-					TrackColumn ();
-					PositionCursor ();
-				}
+				MoveUp ();
 				break;
 
 			case Key.ControlF:
@@ -808,7 +820,7 @@ namespace Terminal.Gui {
 						currentRow--;
 						if (currentRow < topRow) {
 							topRow--;
-
+							SetNeedsDisplay ();
 						}
 						currentLine = GetCurrentLine ();
 						currentColumn = currentLine.Count;
@@ -958,7 +970,7 @@ namespace Terminal.Gui {
 
 				break;
 
-			case (Key)((int)'f' + Key.AltMask): 
+			case (Key)((int)'f' + Key.AltMask):
 				newPos = WordForward (currentColumn, currentRow);
 				if (newPos.HasValue) {
 					currentColumn = newPos.Value.col;
@@ -994,6 +1006,18 @@ namespace Terminal.Gui {
 					SetNeedsDisplay (new Rect (0, currentRow - topRow, 2, Frame.Height));
 				break;
 
+			case Key.CtrlMask | Key.End:
+				currentRow = model.Count;
+				TrackColumn ();
+				PositionCursor ();
+				break;
+
+			case Key.CtrlMask | Key.Home:
+				currentRow = 0;
+				TrackColumn ();
+				PositionCursor ();
+				break;
+
 			default:
 				// Ignore control characters and other special keys
 				if (kb.Key < Key.Space || kb.Key > Key.CharMask)
@@ -1011,6 +1035,36 @@ namespace Terminal.Gui {
 				return true;
 			}
 			return true;
+		}
+
+		private void MoveUp ()
+		{
+			if (currentRow > 0) {
+				if (columnTrack == -1)
+					columnTrack = currentColumn;
+				currentRow--;
+				if (currentRow < topRow) {
+					topRow--;
+					SetNeedsDisplay ();
+				}
+				TrackColumn ();
+				PositionCursor ();
+			}
+		}
+
+		private void MoveDown ()
+		{
+			if (currentRow + 1 < model.Count) {
+				if (columnTrack == -1)
+					columnTrack = currentColumn;
+				currentRow++;
+				if (currentRow >= topRow + Frame.Height) {
+					topRow++;
+					SetNeedsDisplay ();
+				}
+				TrackColumn ();
+				PositionCursor ();
+			}
 		}
 
 		IEnumerable<(int col, int row, Rune rune)> ForwardIterator (int col, int row)
@@ -1042,8 +1096,8 @@ namespace Terminal.Gui {
 				col++;
 				rune = line [col];
 				return true;
-			} 
-			while (row + 1 < model.Count){
+			}
+			while (row + 1 < model.Count) {
 				col = 0;
 				row++;
 				line = model.GetLine (row);
@@ -1091,7 +1145,7 @@ namespace Terminal.Gui {
 
 			var srow = row;
 			if (Rune.IsPunctuation (rune) || Rune.IsWhiteSpace (rune)) {
-				while (MoveNext (ref col, ref row, out rune)){
+				while (MoveNext (ref col, ref row, out rune)) {
 					if (Rune.IsLetterOrDigit (rune))
 						break;
 				}
@@ -1114,18 +1168,18 @@ namespace Terminal.Gui {
 		{
 			if (fromRow == 0 && fromCol == 0)
 				return null;
-			
+
 			var col = fromCol;
 			var row = fromRow;
 			var line = GetCurrentLine ();
 			var rune = RuneAt (col, row);
 
 			if (Rune.IsPunctuation (rune) || Rune.IsSymbol (rune) || Rune.IsWhiteSpace (rune)) {
-				while (MovePrev (ref col, ref row, out rune)){
+				while (MovePrev (ref col, ref row, out rune)) {
 					if (Rune.IsLetterOrDigit (rune))
 						break;
 				}
-				while (MovePrev (ref col, ref row, out rune)){
+				while (MovePrev (ref col, ref row, out rune)) {
 					if (!Rune.IsLetterOrDigit (rune))
 						break;
 				}
@@ -1140,29 +1194,45 @@ namespace Terminal.Gui {
 			return null;
 		}
 
+		///<inheritdoc/>
 		public override bool MouseEvent (MouseEvent ev)
 		{
-			if (!ev.Flags.HasFlag (MouseFlags.Button1Clicked)) {
+			if (!ev.Flags.HasFlag (MouseFlags.Button1Clicked) &&
+				!ev.Flags.HasFlag (MouseFlags.WheeledDown) && !ev.Flags.HasFlag (MouseFlags.WheeledUp)) {
 				return false;
 			}
 
-			if (!HasFocus)
-				SuperView.SetFocus (this);
-
-
-			var maxCursorPositionableLine = (model.Count - 1) - topRow;
-			if (ev.Y > maxCursorPositionableLine) {
-				currentRow = maxCursorPositionableLine;
-			} else {
-				currentRow = ev.Y + topRow;
+			if (!CanFocus) {
+				return true;
 			}
-			var r = GetCurrentLine ();
-			if (ev.X - leftColumn >= r.Count)
-				currentColumn = r.Count - leftColumn;
-			else
-				currentColumn = ev.X - leftColumn;
 
-			PositionCursor ();
+			if (!HasFocus) {
+				SetFocus ();
+			}
+
+			if (ev.Flags == MouseFlags.Button1Clicked) {
+				if (model.Count > 0) {
+					var maxCursorPositionableLine = (model.Count - 1) - topRow;
+					if (ev.Y > maxCursorPositionableLine) {
+						currentRow = maxCursorPositionableLine;
+					} else {
+						currentRow = ev.Y + topRow;
+					}
+					var r = GetCurrentLine ();
+					if (ev.X - leftColumn >= r.Count)
+						currentColumn = r.Count - leftColumn;
+					else
+						currentColumn = ev.X - leftColumn;
+				}
+				PositionCursor ();
+			} else if (ev.Flags == MouseFlags.WheeledDown) {
+				lastWasKill = false;
+				MoveDown ();
+			} else if (ev.Flags == MouseFlags.WheeledUp) {
+				lastWasKill = false;
+				MoveUp ();
+			}
+
 			return true;
 		}
 	}
