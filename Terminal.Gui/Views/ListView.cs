@@ -297,7 +297,7 @@ namespace Terminal.Gui {
 			for (int row = 0; row < f.Height; row++, item++) {
 				bool isSelected = item == selected;
 
-				var newcolor = focused ? (isSelected ? ColorScheme.Focus : ColorScheme.Normal) : (isSelected ? ColorScheme.HotNormal : ColorScheme.Normal);
+				var newcolor = focused ? (isSelected ? ColorScheme.Focus : ColorScheme.Normal) : ColorScheme.Normal;
 				if (newcolor != current) {
 					Driver.SetAttribute (newcolor);
 					current = newcolor;

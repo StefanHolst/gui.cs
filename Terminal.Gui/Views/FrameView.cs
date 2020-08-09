@@ -161,8 +161,8 @@ namespace Terminal.Gui {
 			Driver.SetAttribute (ColorScheme.Normal);
 			Driver.DrawWindowFrame (scrRect, padding + 1, padding + 1, padding + 1, padding + 1, border: true, fill: false);
 
-			if (HasFocus)
-				Driver.SetAttribute (ColorScheme.HotNormal);
+			// if (HasFocus)
+			// 	Driver.SetAttribute (ColorScheme.HotNormal);
 			Driver.DrawWindowTitle (scrRect, Title, padding, padding, padding, padding);
 			Driver.SetAttribute (ColorScheme.Normal);
 		}
