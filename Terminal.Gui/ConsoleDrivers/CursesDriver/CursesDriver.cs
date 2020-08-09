@@ -74,7 +74,13 @@ namespace Terminal.Gui {
 			}
 		}
 		public override void UpdateCursor () => Refresh ();
-		public override void End () => Curses.endwin ();
+		public override void End ()
+		{
+			if (reportableMouseEvents.HasFlag (Curses.Event.ReportMousePosition))
+				StopReportingMouseMoves ();
+
+			Curses.endwin();
+		}
 		public override void UpdateScreen () => window.redrawwin ();
 		public override void SetAttribute (Attribute c) => Curses.attrset (c.value);
 		public Curses.Window window;

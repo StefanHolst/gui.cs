@@ -180,22 +180,6 @@ namespace Terminal.Gui {
 			}
 		}
 
-		public T FindSuper<T>() where T : View
-		{
-			if (this is T t)
-				return t;
-			
-			var view = this;
-			while (view.SuperView != null)
-			{
-				view = view.SuperView;
-				if (view is T t2)
-					return t2;
-			}
-
-			return null;
-		}
-
 		/// <summary>
 		/// Points to the current driver in use by the view, it is a convenience property
 		/// for simplifying the development of new views.
