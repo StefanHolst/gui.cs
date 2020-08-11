@@ -513,7 +513,7 @@ namespace Terminal.Gui {
 			};
 			Add (dirLabel, dirEntry);
 
-			this.nameFieldLabel = new Label ("Open: ") {
+			this.nameFieldLabel = new Label (nameFieldLabel + ": ") {
 				X = 6,
 				Y = 3 + msgLines,
 			};
