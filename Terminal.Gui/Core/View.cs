@@ -530,7 +530,13 @@ namespace Terminal.Gui {
 		///   Use <see cref="X"/>, <see cref="Y"/>, <see cref="Width"/>, and <see cref="Height"/> properties to dynamically control the size and location of the view.
 		/// </para>
 		/// </remarks>
-		public View () : this (text: string.Empty) { }
+		public View () : this (text: string.Empty)
+		{
+			X = 0;
+			Y = 0;
+			Width = Dim.Fill();
+			Height = Dim.Fill();
+		}
 
 
 		/// <summary>
