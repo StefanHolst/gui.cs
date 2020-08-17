@@ -535,6 +535,9 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		public virtual bool OnOpenSelectedItem ()
 		{
+			if (source.Count == 0)
+				return false;
+			
 			var value = source.ToList () [selected];
 			OpenSelectedItem?.Invoke (new ListViewItemEventArgs (selected, value));
 
