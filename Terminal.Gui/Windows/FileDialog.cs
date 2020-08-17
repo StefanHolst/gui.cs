@@ -514,7 +514,7 @@ namespace Terminal.Gui {
 			Add (dirLabel, dirEntry);
 
 			this.nameFieldLabel = new Label (nameFieldLabel + ": ") {
-				X = 6,
+				X = 10 - nameFieldLabel.Length,
 				Y = 3 + msgLines,
 			};
 			nameEntry = new TextField ("") {
@@ -686,7 +686,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="title">The title.</param>
 		/// <param name="message">The message.</param>
-		public SaveDialog (ustring title, ustring message) : base (title, prompt: "Save", nameFieldLabel: "Save as:", message: message) { }
+		public SaveDialog (ustring title, ustring message) : base (title, prompt: "Save", nameFieldLabel: "Save as", message: message) { }
 
 		/// <summary>
 		/// Gets the name of the file the user selected for saving, or null
