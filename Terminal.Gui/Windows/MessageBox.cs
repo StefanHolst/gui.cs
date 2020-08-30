@@ -96,7 +96,7 @@ namespace Terminal.Gui {
 			const int defaultWidth = 50;
 			int textWidth = TextFormatter.MaxWidth (message, width == 0 ? defaultWidth : width);
 			int textHeight = TextFormatter.MaxLines (message, textWidth); // message.Count (ustring.Make ('\n')) + 1;
-			int msgboxHeight = Math.Max (1, textHeight) + 3; // textHeight + (top + top padding + buttons + bottom)
+			int msgboxHeight = Math.Max (1, textHeight) + 4; // textHeight + (top + top padding + buttons + bottom)
 
 			// Create button array for Dialog
 			int count = 0;
@@ -128,7 +128,7 @@ namespace Terminal.Gui {
 				l.LayoutStyle = LayoutStyle.Computed;
 				l.TextAlignment = TextAlignment.Centered;
 				l.X = Pos.Center ();
-				l.Y = Pos.Center ();
+				l.Y = 0;
 				l.Width = Dim.Fill (2);
 				l.Height = Dim.Fill (1);
 				d.Add (l);
