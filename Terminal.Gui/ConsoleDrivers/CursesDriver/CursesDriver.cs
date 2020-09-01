@@ -79,6 +79,9 @@ namespace Terminal.Gui {
 			if (reportableMouseEvents.HasFlag (Curses.Event.ReportMousePosition))
 				StopReportingMouseMoves ();
 
+			if (CursesDefaultEscDelay != -1)
+				Curses.set_escdelay (CursesDefaultEscDelay);
+
 			Curses.endwin();
 		}
 		public override void UpdateScreen () => window.redrawwin ();
@@ -432,7 +435,7 @@ namespace Terminal.Gui {
 
 			// Special handling for ESC, we want to try to catch ESC+letter to simulate alt-letter as well as Alt-Fkey
 			if (wch == 27) {
-				Curses.timeout (200);
+				Curses.timeout (10);
 
 				code = Curses.get_wch (out int wch2);
 
@@ -490,6 +493,7 @@ namespace Terminal.Gui {
 
 		Action<MouseEvent> mouseHandler;
 		MainLoop mainLoop;
+		int CursesDefaultEscDelay = -1;
 
 		public override void PrepareToRun (MainLoop mainLoop, Action<KeyEvent> keyHandler, Action<KeyEvent> keyDownHandler, Action<KeyEvent> keyUpHandler, Action<MouseEvent> mouseHandler)
 		{
@@ -518,6 +522,8 @@ namespace Terminal.Gui {
 			}
 			Curses.raw ();
 			Curses.noecho ();
+			CursesDefaultEscDelay = Curses.get_escdelay ();
+			Curses.set_escdelay (10);
 
 			Curses.Window.Standard.keypad (true);
 			reportableMouseEvents = Curses.mousemask (Curses.Event.AllEvents | Curses.Event.ReportMousePosition, out oldMouseEvents);
