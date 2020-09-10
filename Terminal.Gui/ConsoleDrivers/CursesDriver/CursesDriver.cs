@@ -478,6 +478,15 @@ namespace Terminal.Gui {
 				keyHandler (new KeyEvent (k, MapKeyModifiers (k)));
 			} else {
 				k = (Key)wch;
+				// In linux terminals, ControlH and ctrl+backspace send the same keycode
+				if (k == Key.ControlH)
+				{
+					if (keyModifiers == null)
+						keyModifiers = new KeyModifiers();
+					keyModifiers.Ctrl = true;
+					k = Key.Backspace;
+				}
+					
 				keyDownHandler (new KeyEvent (k, MapKeyModifiers (k)));
 				keyHandler (new KeyEvent (k, MapKeyModifiers (k)));
 			}
