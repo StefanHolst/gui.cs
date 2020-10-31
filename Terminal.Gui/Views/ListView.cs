@@ -103,8 +103,8 @@ namespace Terminal.Gui {
 	/// </para>
 	/// </remarks>
 	public class ListView : View {
-		int top;
-		int selected;
+		protected int top;
+		protected int selected;
 
 		IListDataSource source;
 		/// <summary>
@@ -192,7 +192,7 @@ namespace Terminal.Gui {
 				if (source == null)
 					return;
 
-				if (top < 0 || top >= source.Count)
+				if (value < 0 || value >= source.Count)
 					throw new ArgumentException ("value");
 				top = value;
 				SetNeedsDisplay ();
@@ -208,7 +208,7 @@ namespace Terminal.Gui {
 			set {
 				if (source == null || source.Count == 0)
 					return;
-				if (selected < 0 || selected >= source.Count)
+				if (value < 0 || value >= source.Count)
 					throw new ArgumentException ("value");
 				selected = value;
 				OnSelectedChanged ();
