@@ -79,8 +79,13 @@ namespace Terminal.Gui {
 			if (reportableMouseEvents.HasFlag (Curses.Event.ReportMousePosition))
 				StopReportingMouseMoves ();
 
-			if (CursesDefaultEscDelay != -1)
-				Curses.set_escdelay (CursesDefaultEscDelay);
+			if (CursesDefaultEscDelay != -1){
+				try{
+					Curses.set_escdelay (CursesDefaultEscDelay);
+				} catch (Exception e) {
+					Console.WriteLine ("Curses failed to set esc delay, the exception is: " + e);
+				}
+			}
 
 			Curses.endwin();
 		}
@@ -531,9 +536,13 @@ namespace Terminal.Gui {
 			}
 			Curses.raw ();
 			Curses.noecho ();
-			CursesDefaultEscDelay = Curses.get_escdelay ();
-			Curses.set_escdelay (10);
-
+			try{
+				CursesDefaultEscDelay = Curses.get_escdelay ();
+				Curses.set_escdelay (10);
+			} catch (Exception e) {
+				Console.WriteLine ("Curses failed to get esc delay, the exception is: " + e);
+			}
+			
 			Curses.Window.Standard.keypad (true);
 			reportableMouseEvents = Curses.mousemask (Curses.Event.AllEvents | Curses.Event.ReportMousePosition, out oldMouseEvents);
 			TerminalResized = terminalResized;
