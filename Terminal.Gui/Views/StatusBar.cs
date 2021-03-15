@@ -88,11 +88,16 @@ namespace Terminal.Gui {
 			CanFocus = false;
 			ColorScheme = Colors.Menu;
 			X = 0;
-			Y = SuperView != null ? SuperView.Frame.Height - 1 : Pos.AnchorEnd (1);
 			Width = Dim.Fill ();
 			Height = 1;
 
+			Initialized += StatusBar_Initialized;
 			Application.Resized += Application_Resized ();
+		}
+
+		private void StatusBar_Initialized (object sender, EventArgs e)
+		{
+			Y = SuperView.Frame.Height - 1;
 		}
 
 		private Action<Application.ResizedEventArgs> Application_Resized ()
@@ -100,8 +105,8 @@ namespace Terminal.Gui {
 			return delegate {
 				X = 0;
 				Height = 1;
-				if (SuperView == null || SuperView is Toplevel) {
-					Y = SuperView.Frame.Height - 1;
+				if (SuperView != null || SuperView is Toplevel) {
+					Y = SuperView.Frame.Height - (Visible ? 1 : 0);
 				} else {
 					//Y = Pos.Bottom (SuperView);
 				}
@@ -209,6 +214,14 @@ namespace Terminal.Gui {
 				}
 				disposedValue = true;
 			}
+		}
+
+		///<inheritdoc/>
+		public override bool OnEnter (View view)
+		{
+			Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
+
+			return base.OnEnter (view);
 		}
 	}
 }

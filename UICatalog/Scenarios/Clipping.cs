@@ -32,7 +32,7 @@ namespace UICatalog {
 			//Win.Y = 2;
 			//Win.Width = Dim.Fill () - 4;
 			//Win.Height = Dim.Fill () - 2;
-			var label = new Label ("ScrollView (new Rect (5, 5, 100, 60)) with a 200, 100 ContentSize...") {
+			var label = new Label ("ScrollView (new Rect (3, 3, 50, 20)) with a 200, 100 ContentSize...") {
 				X = 0, Y = 0,
 				//ColorScheme = Colors.Dialog
 			};
@@ -40,10 +40,10 @@ namespace UICatalog {
 
 			var scrollView = new ScrollView (new Rect (3, 3, 50, 20));
 			scrollView.ColorScheme = Colors.Menu;
-			scrollView.ContentSize = new Size (100, 60);
+			scrollView.ContentSize = new Size (200, 100);
 			//ContentOffset = new Point (0, 0),
-			scrollView.ShowVerticalScrollIndicator = true;
-			scrollView.ShowHorizontalScrollIndicator = true;
+			//scrollView.ShowVerticalScrollIndicator = true;
+			//scrollView.ShowHorizontalScrollIndicator = true;
 
 			var embedded1 = new Window ("1") {
 				X = 3,
@@ -69,15 +69,16 @@ namespace UICatalog {
 				Height = Dim.Fill (3),
 				ColorScheme = Colors.TopLevel
 			};
-			embedded3.Add (new Button (2, 2, "click me") {
-				Clicked = () => {
-					MessageBox.Query (10, 5, "Test", "test message", "Ok");
-				}
-			});
+
+			var testButton = new Button (2, 2, "click me");
+			testButton.Clicked += () => {
+				MessageBox.Query (10, 5, "Test", "test message", "Ok");
+			};
+			embedded3.Add (testButton);
 			embedded2.Add (embedded3);
 
 			scrollView.Add (embedded1);
-					
+
 			Top.Add (scrollView);
 		}
 	}

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class TextView
    ">
-    <meta name="generator" content="docfx 2.56.1.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -97,7 +97,6 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.IDisposable</span></div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
     <div><span class="xref">System.ComponentModel.ISupportInitializeNotification</span></div>
     <div><span class="xref">System.ComponentModel.ISupportInitialize</span></div>
   </div>
@@ -131,6 +130,18 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_HotKeySpecifier">View.HotKeySpecifier</a>
     </div>
     <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Shortcut">View.Shortcut</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_ShortcutTag">View.ShortcutTag</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_ShortcutAction">View.ShortcutAction</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Data">View.Data</a>
+    </div>
+    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Driver">View.Driver</a>
     </div>
     <div>
@@ -158,12 +169,6 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_WantContinuousButtonPressed">View.WantContinuousButtonPressed</a>
     </div>
     <div>
-      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Frame">View.Frame</a>
-    </div>
-    <div>
-      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_GetEnumerator">View.GetEnumerator()</a>
-    </div>
-    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutStyle">View.LayoutStyle</a>
     </div>
     <div>
@@ -188,10 +193,13 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetNeedsDisplay">View.SetNeedsDisplay()</a>
     </div>
     <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_ClearLayoutNeeded">View.ClearLayoutNeeded()</a>
+    </div>
+    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetNeedsDisplay_Terminal_Gui_Rect_">View.SetNeedsDisplay(Rect)</a>
     </div>
     <div>
-      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_ChildNeedsDisplay">View.ChildNeedsDisplay()</a>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetChildNeedsDisplay">View.SetChildNeedsDisplay()</a>
     </div>
     <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Add_Terminal_Gui_View_">View.Add(View)</a>
@@ -254,9 +262,6 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnRemoved_Terminal_Gui_View_">View.OnRemoved(View)</a>
     </div>
     <div>
-      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnEnter_Terminal_Gui_View_">View.OnEnter(View)</a>
-    </div>
-    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnLeave_Terminal_Gui_View_">View.OnLeave(View)</a>
     </div>
     <div>
@@ -281,7 +286,7 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnDrawContent_Terminal_Gui_Rect_">View.OnDrawContent(Rect)</a>
     </div>
     <div>
-      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetFocus_Terminal_Gui_View_">View.SetFocus(View)</a>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetFocus">View.SetFocus()</a>
     </div>
     <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_KeyPress">View.KeyPress</a>
@@ -332,6 +337,9 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutSubviews">View.LayoutSubviews()</a>
     </div>
     <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_AutoSize">View.AutoSize</a>
+    </div>
+    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_TextAlignment">View.TextAlignment</a>
     </div>
     <div>
@@ -350,6 +358,9 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnMouseEvent_Terminal_Gui_MouseEvent_">View.OnMouseEvent(MouseEvent)</a>
     </div>
     <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnMouseClick_Terminal_Gui_View_MouseEventArgs_">View.OnMouseClick(View.MouseEventArgs)</a>
+    </div>
+    <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Dispose_System_Boolean_">View.Dispose(Boolean)</a>
     </div>
     <div>
@@ -357,6 +368,15 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
     </div>
     <div>
       <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_EndInit">View.EndInit()</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Visible">View.Visible</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetWidth_System_Int32_System_Int32__">View.SetWidth(Int32, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetHeight_System_Int32_System_Int32__">View.SetHeight(Int32, Int32)</a>
     </div>
     <div>
       <a class="xref" href="Terminal.Gui.Responder.html#Terminal_Gui_Responder_Dispose">Responder.Dispose()</a>
@@ -384,7 +404,7 @@ Multi-line text editing <a class="xref" href="Terminal.Gui.View.html">View</a>
   <h6><strong>Assembly</strong>: Terminal.Gui.dll</h6>
   <h5 id="Terminal_Gui_TextView_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class TextView : View, IDisposable, IEnumerable, ISupportInitializeNotification, ISupportInitialize</code></pre>
+    <pre><code class="lang-csharp hljs">public class TextView : View, IDisposable, ISupportInitializeNotification, ISupportInitialize</code></pre>
   </div>
   <h5 id="Terminal_Gui_TextView_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks">
@@ -409,6 +429,10 @@ keys.
   Moves the cursor to the beginning of the line.
 </td></tr><tr><td>End key, Control-e</td><td>
   Moves the cursor to the end of the line.
+</td></tr><tr><td>Control-Home</td><td>
+  Scrolls to the first line and moves the cursor there.
+</td></tr><tr><td>Control-End</td><td>
+  Scrolls to the last line and moves the cursor there.
 </td></tr><tr><td>Delete, Control-d</td><td>
   Deletes the character in front of the cursor.
 </td></tr><tr><td>Backspace</td><td>
@@ -474,34 +498,6 @@ Initializes a <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> on 
   <h5 id="Terminal_Gui_TextView__ctor_Terminal_Gui_Rect__remarks">Remarks</h5>
   <div class="markdown level1 remarks">
 </div>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  <h4 id="Terminal_Gui_TextView_TextChanged" data-uid="Terminal.Gui.TextView.TextChanged">TextChanged</h4>
-  <div class="markdown level1 summary">
-Raised when the <a class="xref" href="Terminal.Gui.TextView.html#Terminal_Gui_TextView_Text">Text</a> of the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> changes.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action TextChanged</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   
@@ -587,6 +583,141 @@ Gets the current cursor row.
   </table>
   
   
+  <a id="Terminal_Gui_TextView_DesiredCursorVisibility_" data-uid="Terminal.Gui.TextView.DesiredCursorVisibility*"></a>
+  <h4 id="Terminal_Gui_TextView_DesiredCursorVisibility" data-uid="Terminal.Gui.TextView.DesiredCursorVisibility">DesiredCursorVisibility</h4>
+  <div class="markdown level1 summary">
+Get / Set the wished cursor when the field is focused
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CursorVisibility DesiredCursorVisibility { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Terminal.Gui.CursorVisibility.html">CursorVisibility</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_TextView_Frame_" data-uid="Terminal.Gui.TextView.Frame*"></a>
+  <h4 id="Terminal_Gui_TextView_Frame" data-uid="Terminal.Gui.TextView.Frame">Frame</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Rect Frame { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Terminal.Gui.Rect.html">Rect</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Frame">View.Frame</a></div>
+  
+  
+  <a id="Terminal_Gui_TextView_LeftColumn_" data-uid="Terminal.Gui.TextView.LeftColumn*"></a>
+  <h4 id="Terminal_Gui_TextView_LeftColumn" data-uid="Terminal.Gui.TextView.LeftColumn">LeftColumn</h4>
+  <div class="markdown level1 summary">
+Gets or sets the left column.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int LeftColumn { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_TextView_Lines_" data-uid="Terminal.Gui.TextView.Lines*"></a>
+  <h4 id="Terminal_Gui_TextView_Lines" data-uid="Terminal.Gui.TextView.Lines">Lines</h4>
+  <div class="markdown level1 summary">
+Gets the  number of lines.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Lines { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_TextView_Maxlength_" data-uid="Terminal.Gui.TextView.Maxlength*"></a>
+  <h4 id="Terminal_Gui_TextView_Maxlength" data-uid="Terminal.Gui.TextView.Maxlength">Maxlength</h4>
+  <div class="markdown level1 summary">
+Gets the maximum visible length line.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Maxlength { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="Terminal_Gui_TextView_ReadOnly_" data-uid="Terminal.Gui.TextView.ReadOnly*"></a>
   <h4 id="Terminal_Gui_TextView_ReadOnly" data-uid="Terminal.Gui.TextView.ReadOnly">ReadOnly</h4>
   <div class="markdown level1 summary">
@@ -644,6 +775,33 @@ Sets or gets the text in the <a class="xref" href="Terminal.Gui.TextView.html">T
   <h5 id="Terminal_Gui_TextView_Text_remarks">Remarks</h5>
   <div class="markdown level1 remarks">
 </div>
+  
+  
+  <a id="Terminal_Gui_TextView_TopRow_" data-uid="Terminal.Gui.TextView.TopRow*"></a>
+  <h4 id="Terminal_Gui_TextView_TopRow" data-uid="Terminal.Gui.TextView.TopRow">TopRow</h4>
+  <div class="markdown level1 summary">
+Gets or sets the top row.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int TopRow { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   
@@ -792,6 +950,74 @@ Loads the contents of the stream into the  <a class="xref" href="Terminal.Gui.Te
   <div><a class="xref" href="Terminal.Gui.Responder.html#Terminal_Gui_Responder_MouseEvent_Terminal_Gui_MouseEvent_">Responder.MouseEvent(MouseEvent)</a></div>
   
   
+  <a id="Terminal_Gui_TextView_MoveEnd_" data-uid="Terminal.Gui.TextView.MoveEnd*"></a>
+  <h4 id="Terminal_Gui_TextView_MoveEnd" data-uid="Terminal.Gui.TextView.MoveEnd">MoveEnd()</h4>
+  <div class="markdown level1 summary">
+Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> to the last line and position the cursor there.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MoveEnd()</code></pre>
+  </div>
+  
+  
+  <a id="Terminal_Gui_TextView_MoveHome_" data-uid="Terminal.Gui.TextView.MoveHome*"></a>
+  <h4 id="Terminal_Gui_TextView_MoveHome" data-uid="Terminal.Gui.TextView.MoveHome">MoveHome()</h4>
+  <div class="markdown level1 summary">
+Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> to the first line and position the cursor there.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MoveHome()</code></pre>
+  </div>
+  
+  
+  <a id="Terminal_Gui_TextView_OnEnter_" data-uid="Terminal.Gui.TextView.OnEnter*"></a>
+  <h4 id="Terminal_Gui_TextView_OnEnter_Terminal_Gui_View_" data-uid="Terminal.Gui.TextView.OnEnter(Terminal.Gui.View)">OnEnter(View)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool OnEnter(View view)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Terminal.Gui.View.html">View</a></td>
+        <td><span class="parametername">view</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_OnEnter_Terminal_Gui_View_">View.OnEnter(View)</a></div>
+  
+  
   <a id="Terminal_Gui_TextView_PositionCursor_" data-uid="Terminal.Gui.TextView.PositionCursor*"></a>
   <h4 id="Terminal_Gui_TextView_PositionCursor" data-uid="Terminal.Gui.TextView.PositionCursor">PositionCursor()</h4>
   <div class="markdown level1 summary">
@@ -880,14 +1106,15 @@ Positions the cursor on the current row and column
   
   
   <a id="Terminal_Gui_TextView_ScrollTo_" data-uid="Terminal.Gui.TextView.ScrollTo*"></a>
-  <h4 id="Terminal_Gui_TextView_ScrollTo_System_Int32_" data-uid="Terminal.Gui.TextView.ScrollTo(System.Int32)">ScrollTo(Int32)</h4>
+  <h4 id="Terminal_Gui_TextView_ScrollTo_System_Int32_System_Boolean_" data-uid="Terminal.Gui.TextView.ScrollTo(System.Int32,System.Boolean)">ScrollTo(Int32, Boolean)</h4>
   <div class="markdown level1 summary">
-Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> to display the specified row at the top
+Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> to display the specified row at the top if <code data-dev-comment-type="paramref" class="paramref">isRow</code> is true or
+will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> to display the specified column at the left if <code data-dev-comment-type="paramref" class="paramref">isRow</code> is false.
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ScrollTo(int row)</code></pre>
+    <pre><code class="lang-csharp hljs">public void ScrollTo(int idx, bool isRow = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -901,17 +1128,48 @@ Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> t
     <tbody>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">row</span></td>
-        <td>Row that should be displayed at the top, if the value is negative it will be reset to zero</td>
+        <td><span class="parametername">idx</span></td>
+        <td>Row that should be displayed at the top or Column that should be displayed at the left,
+ if the value is negative it will be reset to zero</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isRow</span></td>
+        <td>If true (default) the <code data-dev-comment-type="paramref" class="paramref">idx</code> is a row, column otherwise.</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  
+  
+  <h4 id="Terminal_Gui_TextView_TextChanged" data-uid="Terminal.Gui.TextView.TextChanged">TextChanged</h4>
+  <div class="markdown level1 summary">
+Raised when the <a class="xref" href="Terminal.Gui.TextView.html#Terminal_Gui_TextView_Text">Text</a> of the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> changes.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action TextChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.IDisposable</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IEnumerable</span>
   </div>
   <div>
       <span class="xref">System.ComponentModel.ISupportInitializeNotification</span>
@@ -929,7 +1187,8 @@ Will scroll the <a class="xref" href="Terminal.Gui.TextView.html">TextView</a> t
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

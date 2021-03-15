@@ -279,16 +279,16 @@ namespace Terminal.Gui {
 		{
 			switch (keyEvent.Key) {
 			case Key.CursorUp:
-			case Key.ControlP:
+			case Key.P | Key.CtrlMask:
 				MoveUp ();
 				return true;
 
 			case Key.CursorDown:
-			case Key.ControlN:
+			case Key.N | Key.CtrlMask:
 				MoveDown ();
 				return true;
 
-			case Key.ControlV:
+			case Key.V | Key.CtrlMask:
 			case Key.PageDown:
 				var n = (selected + Frame.Height);
 				if (n > infos.Count)
@@ -325,7 +325,7 @@ namespace Terminal.Gui {
 				return true;
 
 			case Key.Space:
-			case Key.ControlT:
+			case Key.T | Key.CtrlMask:
 				PerformMultipleSelection ();
 				return true;
 
@@ -465,6 +465,14 @@ namespace Terminal.Gui {
 				}
 			}
 		}
+
+		///<inheritdoc/>
+		public override bool OnEnter (View view)
+		{
+			Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
+
+			return base.OnEnter (view);
+		}
 	}
 
 	/// <summary>
@@ -506,10 +514,10 @@ namespace Terminal.Gui {
 				X = Pos.Right (dirLabel),
 				Y = 1 + msgLines,
 				Width = Dim.Fill () - 1,
-				TextChanged = (e) => {
-					DirectoryPath = dirEntry.Text;
-					nameEntry.Text = ustring.Empty;
-				}
+			};
+			dirEntry.TextChanged += (e) => {
+				DirectoryPath = dirEntry.Text;
+				nameEntry.Text = ustring.Empty;
 			};
 			Add (dirLabel, dirEntry);
 
@@ -674,7 +682,7 @@ namespace Terminal.Gui {
 	/// <remarks>
 	/// <para>
 	///   To use, create an instance of <see cref="SaveDialog"/>, and pass it to
-	///   <see cref="Application.Run()"/>. This will run the dialog modally,
+	///   <see cref="Application.Run(Func{Exception, bool})"/>. This will run the dialog modally,
 	///   and when this returns, the <see cref="FileName"/>property will contain the selected file name or 
 	///   null if the user canceled. 
 	/// </para>
@@ -719,7 +727,7 @@ namespace Terminal.Gui {
 	/// </para>
 	/// <para>
 	///   To use, create an instance of <see cref="OpenDialog"/>, and pass it to
-	///   <see cref="Application.Run()"/>. This will run the dialog modally,
+	///   <see cref="Application.Run(Func{Exception, bool})"/>. This will run the dialog modally,
 	///   and when this returns, the list of filds will be available on the <see cref="FilePaths"/> property.
 	/// </para>
 	/// <para>

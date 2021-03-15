@@ -15,7 +15,7 @@ namespace Terminal.Gui {
 	/// or more <see cref="Button"/>s. It defaults to the <see cref="Colors.Dialog"/> color scheme and has a 1 cell padding around the edges.
 	/// </summary>
 	/// <remarks>
-	///  To run the <see cref="Dialog"/> modally, create the <see cref="Dialog"/>, and pass it to <see cref="Application.Run()"/>. 
+	///  To run the <see cref="Dialog"/> modally, create the <see cref="Dialog"/>, and pass it to <see cref="Application.Run(Func{Exception, bool})"/>. 
 	///  This will execute the dialog until it terminates via the [ESC] or [CTRL-Q] key, or when one of the views
 	///  or buttons added to the dialog calls <see cref="Application.RequestStop"/>.
 	/// </remarks>
@@ -104,6 +104,7 @@ namespace Terminal.Gui {
 
 			buttons.Add (button);
 			Add (button);
+			SetNeedsDisplay ();
 			LayoutSubviews ();
 		}
 
@@ -112,7 +113,7 @@ namespace Terminal.Gui {
 			if (buttons.Count == 0) {
 				return 0;
 			}
-			return buttons.Select (b => b.Bounds.Width).Sum () + buttons.Count() - 1;
+			return buttons.Select (b => b.Bounds.Width).Sum () + buttons.Count - 1;
 		}
 
 		void LayoutStartedHandler ()

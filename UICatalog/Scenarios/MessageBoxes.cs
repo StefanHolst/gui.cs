@@ -38,7 +38,7 @@ namespace UICatalog {
 			label = new Label ("height:") {
 				X = 0,
 				Y = Pos.Bottom (label),
-				Width = Dim.Width(label),
+				Width = Dim.Width (label),
 				Height = 1,
 				TextAlignment = Terminal.Gui.TextAlignment.Right,
 			};
@@ -124,49 +124,55 @@ namespace UICatalog {
 			};
 			frame.Add (styleRadioGroup);
 
-			frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit) + Dim.Height (messageEdit) 
-				+ Dim.Height(numButtonsEdit) + Dim.Height (styleRadioGroup) + 2;
+			void Top_Loaded ()
+			{
+				frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit) + Dim.Height (messageEdit)
+					+ Dim.Height (numButtonsEdit) + Dim.Height (styleRadioGroup) + 2;
+				Top.Loaded -= Top_Loaded;
+			}
+			Top.Loaded += Top_Loaded;
 
 			label = new Label ("Button Pressed:") {
 				X = Pos.Center (),
-				Y = Pos.Bottom (frame) + 2,
+				Y = Pos.Bottom (frame) + 4,
 				Height = 1,
 				TextAlignment = Terminal.Gui.TextAlignment.Right,
 			};
 			Win.Add (label);
-			var buttonPressedLabel = new Label ("") {
+			var buttonPressedLabel = new Label (" ") {
 				X = Pos.Center (),
-				Y = Pos.Bottom (frame) + 4,
+				Y = Pos.Bottom (frame) + 5,
 				Width = 25,
 				Height = 1,
 				ColorScheme = Colors.Error,
 			};
 
-			var btnText = new [] { "_Zero", "_One", "T_wo", "_Three", "_Four", "Fi_ve", "Si_x", "_Seven", "_Eight", "_Nine" };
+			//var btnText = new [] { "_Zero", "_One", "T_wo", "_Three", "_Four", "Fi_ve", "Si_x", "_Seven", "_Eight", "_Nine" };
 
 			var showMessageBoxButton = new Button ("Show MessageBox") {
 				X = Pos.Center(),
-				Y = Pos.Bottom (frame) + 2			,
+				Y = Pos.Bottom (frame) + 2,
 				IsDefault = true,
-				Clicked = () => {
-					try {
-						int width = int.Parse (widthEdit.Text.ToString ());
-						int height = int.Parse (heightEdit.Text.ToString ());
-						int numButtons = int.Parse (numButtonsEdit.Text.ToString ());
+			};
+			showMessageBoxButton.Clicked += () => {
+				try {
+					int width = int.Parse (widthEdit.Text.ToString ());
+					int height = int.Parse (heightEdit.Text.ToString ());
+					int numButtons = int.Parse (numButtonsEdit.Text.ToString ());
 
-						var btns = new List<ustring> ();
-						for (int i = 0; i < numButtons; i++) {
-							btns.Add(btnText[i % 10]);
-						}
-						if (styleRadioGroup.SelectedItem == 0) {
-							buttonPressedLabel.Text = $"{MessageBox.Query (width, height, titleEdit.Text.ToString (), messageEdit.Text.ToString (), btns.ToArray ())}";
-						} else {
-							buttonPressedLabel.Text = $"{MessageBox.ErrorQuery (width, height, titleEdit.Text.ToString (), messageEdit.Text.ToString (), btns.ToArray ())}";
-						}
-					} catch (FormatException) {
-						buttonPressedLabel.Text = "Invalid Options";
+					var btns = new List<ustring> ();
+					for (int i = 0; i < numButtons; i++) {
+						//btns.Add(btnText[i % 10]);
+						btns.Add (NumberToWords.Convert (i));
 					}
-				},
+					if (styleRadioGroup.SelectedItem == 0) {
+						buttonPressedLabel.Text = $"{MessageBox.Query (width, height, titleEdit.Text.ToString (), messageEdit.Text.ToString (), btns.ToArray ())}";
+					} else {
+						buttonPressedLabel.Text = $"{MessageBox.ErrorQuery (width, height, titleEdit.Text.ToString (), messageEdit.Text.ToString (), btns.ToArray ())}";
+					}
+				} catch (FormatException) {
+					buttonPressedLabel.Text = "Invalid Options";
+				}
 			};
 			Win.Add (showMessageBoxButton);
 

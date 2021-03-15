@@ -244,7 +244,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Invoked when the selected radio label has changed.
 		/// </summary>
-		public Action<SelectedItemChangedArgs> SelectedItemChanged;
+		public event Action<SelectedItemChangedArgs> SelectedItemChanged;
 
 		/// <summary>
 		/// The currently selected item from the list of radio labels
@@ -257,6 +257,14 @@ namespace Terminal.Gui {
 				cursor = selected;
 				SetNeedsDisplay ();
 			}
+		}
+
+		/// <summary>
+		/// Allow to invoke the <see cref="SelectedItemChanged"/> after their creation.
+		/// </summary>
+		public void Refresh ()
+		{
+			OnSelectedItemChanged (selected, -1);
 		}
 
 		/// <summary>
@@ -346,6 +354,14 @@ namespace Terminal.Gui {
 				}
 			}
 			return true;
+		}
+
+		///<inheritdoc/>
+		public override bool OnEnter (View view)
+		{
+			Application.Driver.SetCursorVisibility (CursorVisibility.Invisible);
+
+			return base.OnEnter (view);
 		}
 	}
 

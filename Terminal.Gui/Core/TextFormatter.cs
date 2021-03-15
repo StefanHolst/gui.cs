@@ -28,7 +28,7 @@ namespace Terminal.Gui {
 	}
 
 	/// <summary>
-	/// Provides text formatting capabilities for console apps. Supports, hotkeys, horizontal alignment, multille lines, and word-based line wrap.
+	/// Provides text formatting capabilities for console apps. Supports, hotkeys, horizontal alignment, multiple lines, and word-based line wrap.
 	/// </summary>
 	public class TextFormatter {
 		List<ustring> lines = new List<ustring> ();
@@ -48,8 +48,8 @@ namespace Terminal.Gui {
 				text = value;
 
 				if (text.RuneCount > 0 && (Size.Width == 0 || Size.Height == 0 || Size.Width != text.RuneCount)) {
-					// Proivde a default size (width = length of longest line, height = 1)
-					// TODO: It might makem more sense for the default to be width = length of first line?
+					// Provide a default size (width = length of longest line, height = 1)
+					// TODO: It might makes more sense for the default to be width = length of first line?
 					Size = new Size (TextFormatter.MaxWidth (Text, int.MaxValue), 1);
 				}
 
@@ -71,7 +71,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		///  Gets or sets the size of the area the text will be constrainted to when formatted. 
+		///  Gets or sets the size of the area the text will be constrained to when formatted.
 		/// </summary>
 		public Size Size {
 			get => size;
@@ -82,7 +82,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// The specifier character for the hotkey (e.g. '_'). Set to '\xffff' to disable hotkey support for this View instance. The default is '\xffff'. 
+		/// The specifier character for the hotkey (e.g. '_'). Set to '\xffff' to disable hotkey support for this View instance. The default is '\xffff'.
 		/// </summary>
 		public Rune HotKeySpecifier { get; set; } = (Rune)0xFFFF;
 
@@ -103,7 +103,12 @@ namespace Terminal.Gui {
 		public uint HotKeyTagMask { get; set; } = 0x100000;
 
 		/// <summary>
-		/// Gets the formatted lines. 
+		/// Gets the cursor position from <see cref="HotKey"/>. If the <see cref="HotKey"/> is defined, the cursor will be positioned over it.
+		/// </summary>
+		public int CursorPosition { get; set; }
+
+		/// <summary>
+		/// Gets the formatted lines.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -138,12 +143,12 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Gets or sets whether the <see cref="TextFormatter"/> needs to format the text when <see cref="Draw(Rect, Attribute, Attribute)"/> is called. 
+		/// Gets or sets whether the <see cref="TextFormatter"/> needs to format the text when <see cref="Draw(Rect, Attribute, Attribute)"/> is called.
 		/// If it is <c>false</c> when Draw is called, the Draw call will be faster.
 		/// </summary>
 		/// <remarks>
 		/// <para>
-		/// This is set to true when the properties of <see cref="TextFormatter"/> are set. 
+		/// This is set to true when the properties of <see cref="TextFormatter"/> are set.
 		/// </para>
 		/// </remarks>
 		public bool NeedsFormat { get => needsFormat; set => needsFormat = value; }
@@ -190,14 +195,14 @@ namespace Terminal.Gui {
 					break;
 				}
 			}
-			return ustring.Make (runes); ;
+			return ustring.Make (runes);
 		}
 
 		/// <summary>
 		/// Formats the provided text to fit within the width provided using word wrapping.
 		/// </summary>
 		/// <param name="text">The text to word wrap</param>
-		/// <param name="width">The width to contrain the text to</param>
+		/// <param name="width">The width to contain the text to</param>
 		/// <returns>Returns a list of word wrapped lines.</returns>
 		/// <remarks>
 		/// <para>
@@ -227,7 +232,7 @@ namespace Terminal.Gui {
 					end -= 1;
 				if (end == start)
 					end = start + width;
-				lines.Add (ustring.Make (runes.GetRange (start, end - start))); 
+				lines.Add (ustring.Make (runes.GetRange (start, end - start)));
 				start = end;
 				if (runes[end] == ' ') {
 					start++;
@@ -276,7 +281,7 @@ namespace Terminal.Gui {
 		/// <param name="text"></param>
 		/// <param name="width"></param>
 		/// <param name="spaceChar">Character to replace whitespace and pad with. For debugging purposes.</param>
-		/// <returns>The justifed text.</returns>
+		/// <returns>The justified text.</returns>
 		public static ustring Justify (ustring text, int width, char spaceChar = ' ')
 		{
 			if (width < 0) {
@@ -383,7 +388,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Computes the maximum width needed to render the text (single line or multple lines) given a minimum width.
+		/// Computes the maximum width needed to render the text (single line or multiple lines) given a minimum width.
 		/// </summary>
 		/// <returns>Max width of lines.</returns>
 		/// <param name="text">Text, may contain newlines.</param>
@@ -391,9 +396,16 @@ namespace Terminal.Gui {
 		public static int MaxWidth (ustring text, int width)
 		{
 			var result = TextFormatter.Format (text, width, TextAlignment.Left, true);
-			return result.Max (s => s.RuneCount);
+			var max = 0;
+			result.ForEach (s => {
+				var m = 0;
+				s.ToRuneList ().ForEach (r => m += Rune.ColumnWidth (r));
+				if (m > max) {
+					max = m;
+				}
+			});
+			return max;
 		}
-
 
 		/// <summary>
 		///  Calculates the rectangle required to hold text, assuming no word wrapping.
@@ -404,8 +416,9 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		public static Rect CalcRect (int x, int y, ustring text)
 		{
-			if (ustring.IsNullOrEmpty (text))
+			if (ustring.IsNullOrEmpty (text)) {
 				return new Rect (new Point (x, y), Size.Empty);
+			}
 
 			int mw = 0;
 			int ml = 1;
@@ -414,17 +427,24 @@ namespace Terminal.Gui {
 			foreach (var rune in text) {
 				if (rune == '\n') {
 					ml++;
-					if (cols > mw)
+					if (cols > mw) {
 						mw = cols;
+					}
 					cols = 0;
 				} else {
 					if (rune != '\r') {
 						cols++;
+						var rw = Rune.ColumnWidth (rune);
+						if (rw > 0) {
+							rw--;
+						}
+						cols += rw;
 					}
 				}
 			}
-			if (cols > mw)
+			if (cols > mw) {
 				mw = cols;
+			}
 
 			return new Rect (x, y, mw, ml);
 		}
@@ -434,8 +454,8 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <param name="text">The text to look in.</param>
 		/// <param name="hotKeySpecifier">The hotkey specifier (e.g. '_') to look for.</param>
-		/// <param name="firstUpperCase">If <c>true</c> the legacy behavior of identifying the first upper case character as the hotkey will be eanbled. 
-		/// Regardless of the value of this parameter, <c>hotKeySpecifier</c> takes precidence.</param>
+		/// <param name="firstUpperCase">If <c>true</c> the legacy behavior of identifying the first upper case character as the hotkey will be enabled.
+		/// Regardless of the value of this parameter, <c>hotKeySpecifier</c> takes precedence.</param>
 		/// <param name="hotPos">Outputs the Rune index into <c>text</c>.</param>
 		/// <param name="hotKey">Outputs the hotKey.</param>
 		/// <returns><c>true</c> if a hotkey was found; <c>false</c> otherwise.</returns>
@@ -497,8 +517,8 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Replaces the Rune at the index specfiied by the <c>hotPos</c> parameter with a tag identifying 
-		/// it as the hotkey. 
+		/// Replaces the Rune at the index specified by the <c>hotPos</c> parameter with a tag identifying 
+		/// it as the hotkey.
 		/// </summary>
 		/// <param name="text">The text to tag the hotkey in.</param>
 		/// <param name="hotPos">The Rune index of the hotkey in <c>text</c>.</param>
@@ -567,36 +587,44 @@ namespace Terminal.Gui {
 				int x;
 				switch (textAlignment) {
 				case TextAlignment.Left:
-					x = bounds.Left;
-					break;
 				case TextAlignment.Justified:
 					x = bounds.Left;
+					CursorPosition = hotKeyPos;
 					break;
 				case TextAlignment.Right:
 					x = bounds.Right - runes.Length;
+					CursorPosition = bounds.Width - runes.Length + hotKeyPos;
 					break;
 				case TextAlignment.Centered:
 					x = bounds.Left + (bounds.Width - runes.Length) / 2;
+					CursorPosition = (bounds.Width - runes.Length) / 2 + hotKeyPos;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException ();
 				}
-				for (var col = bounds.Left; col < bounds.Left + bounds.Width; col++) {
+				var col = bounds.Left;
+				for (var idx = bounds.Left; idx < bounds.Left + bounds.Width; idx++) {
 					Application.Driver?.Move (col, bounds.Top + line);
 					var rune = (Rune)' ';
-					if (col >= x && col < (x + runes.Length)) {
-						rune = runes [col - x];
+					if (idx >= x && idx < (x + runes.Length)) {
+						rune = runes [idx - x];
 					}
 					if ((rune & HotKeyTagMask) == HotKeyTagMask) {
+						if (textAlignment == TextAlignment.Justified) {
+							CursorPosition = idx - bounds.Left;
+						}
 						Application.Driver?.SetAttribute (hotColor);
 						Application.Driver?.AddRune ((Rune)((uint)rune & ~HotKeyTagMask));
 						Application.Driver?.SetAttribute (normalColor);
 					} else {
 						Application.Driver?.AddRune (rune);
 					}
+					col += Rune.ColumnWidth (rune);
+					if (idx + 1 < runes.Length && col + Rune.ColumnWidth (runes [idx + 1]) > bounds.Width) {
+						break;
+					}
 				}
 			}
 		}
-
 	}
 }

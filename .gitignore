@@ -12,3 +12,9 @@ docfx/api
 
 #git merge files
 *.orig
+
+.vscode/
+
+demo.txt
+
+*.deb

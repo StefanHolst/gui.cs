@@ -39,7 +39,7 @@ namespace UICatalog {
 			label = new Label ("height:") {
 				X = 0,
 				Y = Pos.Bottom (label),
-				Width = Dim.Width(label),
+				Width = Dim.Width (label),
 				Height = 1,
 				TextAlignment = Terminal.Gui.TextAlignment.Right,
 			};
@@ -93,75 +93,86 @@ namespace UICatalog {
 			};
 			frame.Add (numButtonsEdit);
 
-			frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit) 
-				+ Dim.Height(numButtonsEdit) + 2;
+			void Top_Loaded ()
+			{
+				frame.Height = Dim.Height (widthEdit) + Dim.Height (heightEdit) + Dim.Height (titleEdit)
+					+ Dim.Height (numButtonsEdit) + 2;
+				Top.Loaded -= Top_Loaded;
+			}
+			Top.Loaded += Top_Loaded;
 
 			label = new Label ("Button Pressed:") {
 				X = Pos.Center (),
-				Y = Pos.Bottom (frame) + 2,
+				Y = Pos.Bottom (frame) + 4,
 				Height = 1,
 				TextAlignment = Terminal.Gui.TextAlignment.Right,
 			};
 			Win.Add (label);
-			var buttonPressedLabel = new Label ("") {
+			var buttonPressedLabel = new Label (" ") {
 				X = Pos.Center (),
-				Y = Pos.Bottom (frame) + 4,
+				Y = Pos.Bottom (frame) + 5,
 				Width = 25,
 				Height = 1,
 				ColorScheme = Colors.Error,
 			};
 
-			var btnText = new [] { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+			//var btnText = new [] { "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
 			var showDialogButton = new Button ("Show Dialog") {
 				X = Pos.Center(),
-				Y = Pos.Bottom (frame) + 2			,
+				Y = Pos.Bottom (frame) + 2,
 				IsDefault = true,
-				Clicked = () => {
-					try {
-						int width = int.Parse (widthEdit.Text.ToString ());
-						int height = int.Parse (heightEdit.Text.ToString ());
-						int numButtons = int.Parse (numButtonsEdit.Text.ToString ());
+			};
+			showDialogButton.Clicked += () => {
+				try {
+					int width = int.Parse (widthEdit.Text.ToString ());
+					int height = int.Parse (heightEdit.Text.ToString ());
+					int numButtons = int.Parse (numButtonsEdit.Text.ToString ());
 
-						var buttons = new List<Button> ();
-						var clicked = -1;
-						for (int i = 0; i < numButtons; i++) {
-							var buttonId = i;
-							var button = new Button (btnText [buttonId % 10], is_default: buttonId == 0) {
-								Clicked = () => {
-									clicked = buttonId;
-									Application.RequestStop ();
-								},
-							};
-							buttons.Add(button);
-						}
-
-						// This tests dynamically adding buttons; ensuring the dialog resizes if needed and 
-						// the buttons are laid out correctly
-						var dialog = new Dialog (titleEdit.Text, width, height, buttons.ToArray ());
-						var add = new Button ("Add a button") {
-							X = Pos.Center (),
-							Y = Pos.Center (),
-							Clicked = () => {
-								var buttonId = buttons.Count;
-								var button = new Button (btnText [buttonId % 10], is_default: buttonId == 0) {
-									Clicked = () => {
-										clicked = buttonId;
-										Application.RequestStop ();
-									},
-								};
-								buttons.Add (button);
-								dialog.AddButton (button);
-							},
+					var buttons = new List<Button> ();
+					var clicked = -1;
+					for (int i = 0; i < numButtons; i++) {
+						var buttonId = i;
+						//var button = new Button (btnText [buttonId % 10],
+						//	is_default: buttonId == 0);
+						var button = new Button (NumberToWords.Convert(buttonId),
+							is_default: buttonId == 0);
+						button.Clicked += () => {
+							clicked = buttonId;
+							Application.RequestStop ();
 						};
-						dialog.Add (add);
-
-						Application.Run (dialog);
-						buttonPressedLabel.Text = $"{clicked}";
-
-					} catch (FormatException) {
-						buttonPressedLabel.Text = "Invalid Options";
+						buttons.Add (button);
 					}
-				},
+
+					// This tests dynamically adding buttons; ensuring the dialog resizes if needed and 
+					// the buttons are laid out correctly
+					var dialog = new Dialog (titleEdit.Text, width, height,
+						buttons.ToArray ());
+					var add = new Button ("Add a button") {
+						X = Pos.Center (),
+						Y = Pos.Center ()
+					};
+					add.Clicked += () => {
+						var buttonId = buttons.Count;
+						//var button = new Button (btnText [buttonId % 10],
+						//	is_default: buttonId == 0);
+						var button = new Button (NumberToWords.Convert (buttonId),
+							is_default: buttonId == 0);
+						button.Clicked += () => {
+							clicked = buttonId;
+							Application.RequestStop ();
+						};
+						buttons.Add (button);
+						dialog.AddButton (button);
+						button.TabIndex = buttons [buttons.Count - 2].TabIndex + 1;
+					};
+					dialog.Add (add);
+
+					Application.Run (dialog);
+					buttonPressedLabel.Text = $"{clicked}";
+
+				} catch (FormatException) {
+					buttonPressedLabel.Text = "Invalid Options";
+				}
 			};
 			Win.Add (showDialogButton);
 

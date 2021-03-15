@@ -9,6 +9,7 @@
 //  - Does not support IEnumerable
 // Any udpates done here should probably be done in Window as well; TODO: Merge these classes
 
+using System.Linq;
 using NStack;
 
 namespace Terminal.Gui {
@@ -92,8 +93,10 @@ namespace Terminal.Gui {
 
 		void Initialize ()
 		{
-			base.Add (contentView);
-			contentView.Text = base.Text;
+			if (Subviews?.Count == 0) {
+				base.Add (contentView);
+				contentView.Text = base.Text;
+			}
 		}
 
 		void DrawFrame ()
@@ -145,10 +148,9 @@ namespace Terminal.Gui {
 		public override void Redraw (Rect bounds)
 		{
 			var padding = 0;
-			Application.CurrentView = this;
 			var scrRect = ViewToScreen (new Rect (0, 0, Frame.Width, Frame.Height));
 
-			if (NeedDisplay != null && !NeedDisplay.IsEmpty) {
+			if (!NeedDisplay.IsEmpty) {
 				Driver.SetAttribute (ColorScheme.Normal);
 				Driver.DrawWindowFrame (scrRect, padding + 1, padding + 1, padding + 1, padding + 1, border: true, fill: true);
 			}
@@ -189,6 +191,16 @@ namespace Terminal.Gui {
 			set {
 				base.TextAlignment = contentView.TextAlignment = value;
 			}
+		}
+
+		///<inheritdoc/>
+		public override bool OnEnter (View view)
+		{
+			if (Subviews.Count == 0 || !Subviews.Any (subview => subview.CanFocus)) {
+				Application.Driver?.SetCursorVisibility (CursorVisibility.Invisible);
+			}
+
+			return base.OnEnter (view);
 		}
 	}
 }

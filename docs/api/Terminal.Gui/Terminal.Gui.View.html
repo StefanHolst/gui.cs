@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class View
    ">
-    <meta name="generator" content="docfx 2.56.1.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -105,14 +105,15 @@ View is the base class for all views on the screen and represents a visible elem
       <div class="level3"><a class="xref" href="Terminal.Gui.ScrollBarView.html">ScrollBarView</a></div>
       <div class="level3"><a class="xref" href="Terminal.Gui.ScrollView.html">ScrollView</a></div>
       <div class="level3"><a class="xref" href="Terminal.Gui.StatusBar.html">StatusBar</a></div>
+      <div class="level3"><a class="xref" href="Terminal.Gui.TableView.html">TableView</a></div>
       <div class="level3"><a class="xref" href="Terminal.Gui.TextField.html">TextField</a></div>
       <div class="level3"><a class="xref" href="Terminal.Gui.TextView.html">TextView</a></div>
       <div class="level3"><a class="xref" href="Terminal.Gui.Toplevel.html">Toplevel</a></div>
+      <div class="level3"><a class="xref" href="Terminal.Gui.TreeView-1.html">TreeView&lt;T&gt;</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.IDisposable</span></div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
     <div><span class="xref">System.ComponentModel.ISupportInitializeNotification</span></div>
     <div><span class="xref">System.ComponentModel.ISupportInitialize</span></div>
   </div>
@@ -147,7 +148,7 @@ View is the base class for all views on the screen and represents a visible elem
   <h6><strong>Assembly</strong>: Terminal.Gui.dll</h6>
   <h5 id="Terminal_Gui_View_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class View : Responder, IDisposable, IEnumerable, ISupportInitializeNotification, ISupportInitialize</code></pre>
+    <pre><code class="lang-csharp hljs">public class View : Responder, IDisposable, ISupportInitializeNotification, ISupportInitialize</code></pre>
   </div>
   <h5 id="Terminal_Gui_View_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks">
@@ -421,365 +422,38 @@ Initializes a new instance of <a class="xref" href="Terminal.Gui.View.html">View
   If <code>rect.Height</code> is greater than one, word wrapping is provided.
 </p>
 </div>
-  <h3 id="fields">Fields
-  </h3>
-  
-  
-  <h4 id="Terminal_Gui_View_Added" data-uid="Terminal.Gui.View.Added">Added</h4>
-  <div class="markdown level1 summary">
-Event fired when a subview is being added to this view.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View&gt; Added</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.html">View</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_DrawContent" data-uid="Terminal.Gui.View.DrawContent">DrawContent</h4>
-  <div class="markdown level1 summary">
-Event invoked when the content area of the View is to be drawn.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;Rect&gt; DrawContent</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.Rect.html">Rect</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Terminal_Gui_View_DrawContent_remarks">Remarks</h5>
-  <div class="markdown level1 remarks">
-<p>
-Will be invoked before any subviews added with <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Add_Terminal_Gui_View_">Add(View)</a> have been drawn.
-</p>
-<p>
-Rect provides the view-relative rectangle describing the currently visible viewport into the <a class="xref" href="Terminal.Gui.View.html">View</a>.
-</p>
-</div>
-  
-  
-  <h4 id="Terminal_Gui_View_Enter" data-uid="Terminal.Gui.View.Enter">Enter</h4>
-  <div class="markdown level1 summary">
-Event fired when the view gets focus.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.FocusEventArgs&gt; Enter</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.FocusEventArgs.html">View.FocusEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_KeyDown" data-uid="Terminal.Gui.View.KeyDown">KeyDown</h4>
-  <div class="markdown level1 summary">
-Invoked when a key is pressed
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.KeyEventEventArgs&gt; KeyDown</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_KeyPress" data-uid="Terminal.Gui.View.KeyPress">KeyPress</h4>
-  <div class="markdown level1 summary">
-Invoked when a character key is pressed and occurs after the key up event.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.KeyEventEventArgs&gt; KeyPress</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_KeyUp" data-uid="Terminal.Gui.View.KeyUp">KeyUp</h4>
-  <div class="markdown level1 summary">
-Invoked when a key is released
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.KeyEventEventArgs&gt; KeyUp</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_LayoutComplete" data-uid="Terminal.Gui.View.LayoutComplete">LayoutComplete</h4>
-  <div class="markdown level1 summary">
-Fired after the Views&apos;s <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutSubviews">LayoutSubviews()</a> method has completed. 
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.LayoutEventArgs&gt; LayoutComplete</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.LayoutEventArgs.html">View.LayoutEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Terminal_Gui_View_LayoutComplete_remarks">Remarks</h5>
-  <div class="markdown level1 remarks">
-Subscribe to this event to perform tasks when the <a class="xref" href="Terminal.Gui.View.html">View</a> has been resized or the layout has otherwise changed.
-</div>
-  
-  
-  <h4 id="Terminal_Gui_View_LayoutStarted" data-uid="Terminal.Gui.View.LayoutStarted">LayoutStarted</h4>
-  <div class="markdown level1 summary">
-Fired after the Views&apos;s <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutSubviews">LayoutSubviews()</a> method has completed. 
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.LayoutEventArgs&gt; LayoutStarted</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.LayoutEventArgs.html">View.LayoutEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Terminal_Gui_View_LayoutStarted_remarks">Remarks</h5>
-  <div class="markdown level1 remarks">
-Subscribe to this event to perform tasks when the <a class="xref" href="Terminal.Gui.View.html">View</a> has been resized or the layout has otherwise changed.
-</div>
-  
-  
-  <h4 id="Terminal_Gui_View_Leave" data-uid="Terminal.Gui.View.Leave">Leave</h4>
-  <div class="markdown level1 summary">
-Event fired when the view looses focus.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.FocusEventArgs&gt; Leave</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.FocusEventArgs.html">View.FocusEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_MouseClick" data-uid="Terminal.Gui.View.MouseClick">MouseClick</h4>
-  <div class="markdown level1 summary">
-Event fired when a mouse event is generated.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.MouseEventArgs&gt; MouseClick</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_MouseEnter" data-uid="Terminal.Gui.View.MouseEnter">MouseEnter</h4>
-  <div class="markdown level1 summary">
-Event fired when the view receives the mouse event for the first time.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.MouseEventArgs&gt; MouseEnter</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_MouseLeave" data-uid="Terminal.Gui.View.MouseLeave">MouseLeave</h4>
-  <div class="markdown level1 summary">
-Event fired when the view receives a mouse event for the last time.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View.MouseEventArgs&gt; MouseLeave</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
-  <h4 id="Terminal_Gui_View_Removed" data-uid="Terminal.Gui.View.Removed">Removed</h4>
-  <div class="markdown level1 summary">
-Event fired when a subview is being removed from this view.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Action&lt;View&gt; Removed</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.html">View</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
+  
+  
+  <a id="Terminal_Gui_View_AutoSize_" data-uid="Terminal.Gui.View.AutoSize*"></a>
+  <h4 id="Terminal_Gui_View_AutoSize" data-uid="Terminal.Gui.View.AutoSize">AutoSize</h4>
+  <div class="markdown level1 summary">
+Used by <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Text">Text</a> to resize the view&apos;s <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Bounds">Bounds</a> with the <a class="xref" href="Terminal.Gui.TextFormatter.html#Terminal_Gui_TextFormatter_Size">Size</a>.
+Setting <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_AutoSize">AutoSize</a> to true only work if the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Width">Width</a> and <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Height">Height</a> are null or
+<a class="xref" href="Terminal.Gui.LayoutStyle.html#Terminal_Gui_LayoutStyle_Absolute">Absolute</a> values and doesn&apos;t work with <a class="xref" href="Terminal.Gui.LayoutStyle.html#Terminal_Gui_LayoutStyle_Computed">Computed</a> layout,
+to avoid breaking the <a class="xref" href="Terminal.Gui.Pos.html">Pos</a> and <a class="xref" href="Terminal.Gui.Dim.html">Dim</a> settings.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool AutoSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="Terminal_Gui_View_Bounds_" data-uid="Terminal.Gui.View.Bounds*"></a>
@@ -875,6 +549,35 @@ color scheme.
       </tr>
     </tbody>
   </table>
+  
+  
+  <a id="Terminal_Gui_View_Data_" data-uid="Terminal.Gui.View.Data*"></a>
+  <h4 id="Terminal_Gui_View_Data" data-uid="Terminal.Gui.View.Data">Data</h4>
+  <div class="markdown level1 summary">
+Gets or sets arbitrary data for the view.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object Data { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Terminal_Gui_View_Data_remarks">Remarks</h5>
+  <div class="markdown level1 remarks">This property is not used internally.</div>
   
   
   <a id="Terminal_Gui_View_Driver_" data-uid="Terminal.Gui.View.Driver*"></a>
@@ -1217,6 +920,87 @@ Returns the most focused view in the chain of subviews (the leaf view that has t
   </table>
   
   
+  <a id="Terminal_Gui_View_Shortcut_" data-uid="Terminal.Gui.View.Shortcut*"></a>
+  <h4 id="Terminal_Gui_View_Shortcut" data-uid="Terminal.Gui.View.Shortcut">Shortcut</h4>
+  <div class="markdown level1 summary">
+This is the global setting that can be used as a global shortcut to invoke an action if provided.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Key Shortcut { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Terminal.Gui.Key.html">Key</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_View_ShortcutAction_" data-uid="Terminal.Gui.View.ShortcutAction*"></a>
+  <h4 id="Terminal_Gui_View_ShortcutAction" data-uid="Terminal.Gui.View.ShortcutAction">ShortcutAction</h4>
+  <div class="markdown level1 summary">
+The action to run if the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Shortcut">Shortcut</a> is defined.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Action ShortcutAction { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_View_ShortcutTag_" data-uid="Terminal.Gui.View.ShortcutTag*"></a>
+  <h4 id="Terminal_Gui_View_ShortcutTag" data-uid="Terminal.Gui.View.ShortcutTag">ShortcutTag</h4>
+  <div class="markdown level1 summary">
+The keystroke combination used in the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Shortcut">Shortcut</a> as string.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ustring ShortcutTag { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">NStack.ustring</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="Terminal_Gui_View_Subviews_" data-uid="Terminal.Gui.View.Subviews*"></a>
   <h4 id="Terminal_Gui_View_Subviews" data-uid="Terminal.Gui.View.Subviews">Subviews</h4>
   <div class="markdown level1 summary">
@@ -1417,6 +1201,33 @@ Gets or sets how the View&apos;s <a class="xref" href="Terminal.Gui.View.html#Te
       <tr>
         <td><a class="xref" href="Terminal.Gui.TextAlignment.html">TextAlignment</a></td>
         <td>The text alignment.</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="Terminal_Gui_View_Visible_" data-uid="Terminal.Gui.View.Visible*"></a>
+  <h4 id="Terminal_Gui_View_Visible" data-uid="Terminal.Gui.View.Visible">Visible</h4>
+  <div class="markdown level1 summary">
+Gets or sets the view visibility.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Visible { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -1754,18 +1565,6 @@ Brings the specified subview to the front so it is drawn on top of any other vie
 </div>
   
   
-  <a id="Terminal_Gui_View_ChildNeedsDisplay_" data-uid="Terminal.Gui.View.ChildNeedsDisplay*"></a>
-  <h4 id="Terminal_Gui_View_ChildNeedsDisplay" data-uid="Terminal.Gui.View.ChildNeedsDisplay">ChildNeedsDisplay()</h4>
-  <div class="markdown level1 summary">
-Indicates that any child views (in the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Subviews">Subviews</a> list) need to be repainted.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void ChildNeedsDisplay()</code></pre>
-  </div>
-  
-  
   <a id="Terminal_Gui_View_Clear_" data-uid="Terminal.Gui.View.Clear*"></a>
   <h4 id="Terminal_Gui_View_Clear" data-uid="Terminal.Gui.View.Clear">Clear()</h4>
   <div class="markdown level1 summary">
@@ -1816,10 +1615,22 @@ Clears the specified region with the current color.
 </div>
   
   
+  <a id="Terminal_Gui_View_ClearLayoutNeeded_" data-uid="Terminal.Gui.View.ClearLayoutNeeded*"></a>
+  <h4 id="Terminal_Gui_View_ClearLayoutNeeded" data-uid="Terminal.Gui.View.ClearLayoutNeeded">ClearLayoutNeeded()</h4>
+  <div class="markdown level1 summary">
+Removes the <span class="xref">Terminal.Gui.View.SetNeedsLayout</span> setting on this view.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ClearLayoutNeeded()</code></pre>
+  </div>
+  
+  
   <a id="Terminal_Gui_View_ClearNeedsDisplay_" data-uid="Terminal.Gui.View.ClearNeedsDisplay*"></a>
   <h4 id="Terminal_Gui_View_ClearNeedsDisplay" data-uid="Terminal.Gui.View.ClearNeedsDisplay">ClearNeedsDisplay()</h4>
   <div class="markdown level1 summary">
-Removes the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetNeedsDisplay">SetNeedsDisplay()</a> and the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_ChildNeedsDisplay">ChildNeedsDisplay()</a> setting on this view.
+Removes the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_SetNeedsDisplay">SetNeedsDisplay()</a> and the <span class="xref">Terminal.Gui.View.ChildNeedsDisplay()</span> setting on this view.
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -2112,33 +1923,6 @@ Focuses the previous view.
   </table>
   
   
-  <a id="Terminal_Gui_View_GetEnumerator_" data-uid="Terminal.Gui.View.GetEnumerator*"></a>
-  <h4 id="Terminal_Gui_View_GetEnumerator" data-uid="Terminal.Gui.View.GetEnumerator">GetEnumerator()</h4>
-  <div class="markdown level1 summary">
-Gets an enumerator that enumerates the subviews in this view.
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerator GetEnumerator()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.IEnumerator</span></td>
-        <td>The enumerator.</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  
   <a id="Terminal_Gui_View_LayoutSubviews_" data-uid="Terminal.Gui.View.LayoutSubviews*"></a>
   <h4 id="Terminal_Gui_View_LayoutSubviews" data-uid="Terminal.Gui.View.LayoutSubviews">LayoutSubviews()</h4>
   <div class="markdown level1 summary">
@@ -2426,6 +2210,35 @@ This method will be called before any subviews added with <a class="xref" href="
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Terminal.Gui.Responder.html#Terminal_Gui_Responder_OnLeave_Terminal_Gui_View_">Responder.OnLeave(View)</a></div>
+  
+  
+  <a id="Terminal_Gui_View_OnMouseClick_" data-uid="Terminal.Gui.View.OnMouseClick*"></a>
+  <h4 id="Terminal_Gui_View_OnMouseClick_Terminal_Gui_View_MouseEventArgs_" data-uid="Terminal.Gui.View.OnMouseClick(Terminal.Gui.View.MouseEventArgs)">OnMouseClick(View.MouseEventArgs)</h4>
+  <div class="markdown level1 summary">
+Invokes the MouseClick event.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void OnMouseClick(View.MouseEventArgs args)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a></td>
+        <td><span class="parametername">args</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   
   
   <a id="Terminal_Gui_View_OnMouseEnter_" data-uid="Terminal.Gui.View.OnMouseEnter*"></a>
@@ -2767,7 +2580,7 @@ Redraws this view and its subviews; only redraws the views that have been flagge
 </p>
 <p>
    Views should set the color that they want to use on entry, as otherwise this will inherit
-   the last color that was set coglobally on the driver.
+   the last color that was set globally on the driver.
 </p>
 <p>
    Overrides of <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Redraw_Terminal_Gui_Rect_">Redraw(Rect)</a> must ensure they do not set <code>Driver.Clip</code> to a clip region
@@ -2935,6 +2748,18 @@ Sends the specified subview to the front so it is the first view drawn
 </div>
   
   
+  <a id="Terminal_Gui_View_SetChildNeedsDisplay_" data-uid="Terminal.Gui.View.SetChildNeedsDisplay*"></a>
+  <h4 id="Terminal_Gui_View_SetChildNeedsDisplay" data-uid="Terminal.Gui.View.SetChildNeedsDisplay">SetChildNeedsDisplay()</h4>
+  <div class="markdown level1 summary">
+Indicates that any child views (in the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Subviews">Subviews</a> list) need to be repainted.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetChildNeedsDisplay()</code></pre>
+  </div>
+  
+  
   <a id="Terminal_Gui_View_SetClip_" data-uid="Terminal.Gui.View.SetClip*"></a>
   <h4 id="Terminal_Gui_View_SetClip_Terminal_Gui_Rect_" data-uid="Terminal.Gui.View.SetClip(Terminal.Gui.Rect)">SetClip(Rect)</h4>
   <div class="markdown level1 summary">
@@ -2980,14 +2805,26 @@ Sets the clip region to the specified view-relative region.
   
   
   <a id="Terminal_Gui_View_SetFocus_" data-uid="Terminal.Gui.View.SetFocus*"></a>
-  <h4 id="Terminal_Gui_View_SetFocus_Terminal_Gui_View_" data-uid="Terminal.Gui.View.SetFocus(Terminal.Gui.View)">SetFocus(View)</h4>
+  <h4 id="Terminal_Gui_View_SetFocus" data-uid="Terminal.Gui.View.SetFocus">SetFocus()</h4>
   <div class="markdown level1 summary">
-Causes the specified subview to have focus.
+Causes the specified view and the entire parent hierarchy to have the focused order updated.
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SetFocus(View view)</code></pre>
+    <pre><code class="lang-csharp hljs">public void SetFocus()</code></pre>
+  </div>
+  
+  
+  <a id="Terminal_Gui_View_SetHeight_" data-uid="Terminal.Gui.View.SetHeight*"></a>
+  <h4 id="Terminal_Gui_View_SetHeight_System_Int32_System_Int32__" data-uid="Terminal.Gui.View.SetHeight(System.Int32,System.Int32@)">SetHeight(Int32, out Int32)</h4>
+  <div class="markdown level1 summary">
+Calculate the height based on the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Height">Height</a> settings.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SetHeight(int desiredHeight, out int resultHeight)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -3000,9 +2837,29 @@ Causes the specified subview to have focus.
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Terminal.Gui.View.html">View</a></td>
-        <td><span class="parametername">view</span></td>
-        <td>View.</td>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">desiredHeight</span></td>
+        <td>The desired height.</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">resultHeight</span></td>
+        <td>The real result height.</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td>True if the height can be directly assigned, false otherwise.</td>
       </tr>
     </tbody>
   </table>
@@ -3049,6 +2906,55 @@ Flags the view-relative region on this View as needing to be repainted.
   </table>
   
   
+  <a id="Terminal_Gui_View_SetWidth_" data-uid="Terminal.Gui.View.SetWidth*"></a>
+  <h4 id="Terminal_Gui_View_SetWidth_System_Int32_System_Int32__" data-uid="Terminal.Gui.View.SetWidth(System.Int32,System.Int32@)">SetWidth(Int32, out Int32)</h4>
+  <div class="markdown level1 summary">
+Calculate the width based on the <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Width">Width</a> settings.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SetWidth(int desiredWidth, out int resultWidth)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">desiredWidth</span></td>
+        <td>The desired width.</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">resultWidth</span></td>
+        <td>The real result width.</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td>True if the width can be directly assigned, false otherwise.</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <a id="Terminal_Gui_View_ToString_" data-uid="Terminal.Gui.View.ToString*"></a>
   <h4 id="Terminal_Gui_View_ToString" data-uid="Terminal.Gui.View.ToString">ToString()</h4>
   <div class="markdown level1 summary">
@@ -3080,6 +2986,93 @@ Pretty prints the View
   </h3>
   
   
+  <h4 id="Terminal_Gui_View_Added" data-uid="Terminal.Gui.View.Added">Added</h4>
+  <div class="markdown level1 summary">
+Event fired when a subview is being added to this view.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View&gt; Added</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.html">View</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_DrawContent" data-uid="Terminal.Gui.View.DrawContent">DrawContent</h4>
+  <div class="markdown level1 summary">
+Event invoked when the content area of the View is to be drawn.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;Rect&gt; DrawContent</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.Rect.html">Rect</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Terminal_Gui_View_DrawContent_remarks">Remarks</h5>
+  <div class="markdown level1 remarks">
+<p>
+Will be invoked before any subviews added with <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_Add_Terminal_Gui_View_">Add(View)</a> have been drawn.
+</p>
+<p>
+Rect provides the view-relative rectangle describing the currently visible viewport into the <a class="xref" href="Terminal.Gui.View.html">View</a>.
+</p>
+</div>
+  
+  
+  <h4 id="Terminal_Gui_View_Enter" data-uid="Terminal.Gui.View.Enter">Enter</h4>
+  <div class="markdown level1 summary">
+Event fired when the view gets focus.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.FocusEventArgs&gt; Enter</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.FocusEventArgs.html">View.FocusEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
   <h4 id="Terminal_Gui_View_Initialized" data-uid="Terminal.Gui.View.Initialized">Initialized</h4>
   <div class="markdown level1 summary">
 Event called only once when the <a class="xref" href="Terminal.Gui.View.html">View</a> is being initialized for the first time.
@@ -3106,12 +3099,277 @@ This derived from <span class="xref">System.ComponentModel.ISupportInitializeNot
       </tr>
     </tbody>
   </table>
+  
+  
+  <h4 id="Terminal_Gui_View_KeyDown" data-uid="Terminal.Gui.View.KeyDown">KeyDown</h4>
+  <div class="markdown level1 summary">
+Invoked when a key is pressed
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.KeyEventEventArgs&gt; KeyDown</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_KeyPress" data-uid="Terminal.Gui.View.KeyPress">KeyPress</h4>
+  <div class="markdown level1 summary">
+Invoked when a character key is pressed and occurs after the key up event.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.KeyEventEventArgs&gt; KeyPress</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_KeyUp" data-uid="Terminal.Gui.View.KeyUp">KeyUp</h4>
+  <div class="markdown level1 summary">
+Invoked when a key is released
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.KeyEventEventArgs&gt; KeyUp</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.KeyEventEventArgs.html">View.KeyEventEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_LayoutComplete" data-uid="Terminal.Gui.View.LayoutComplete">LayoutComplete</h4>
+  <div class="markdown level1 summary">
+Fired after the Views&apos;s <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutSubviews">LayoutSubviews()</a> method has completed. 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.LayoutEventArgs&gt; LayoutComplete</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.LayoutEventArgs.html">View.LayoutEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Terminal_Gui_View_LayoutComplete_remarks">Remarks</h5>
+  <div class="markdown level1 remarks">
+Subscribe to this event to perform tasks when the <a class="xref" href="Terminal.Gui.View.html">View</a> has been resized or the layout has otherwise changed.
+</div>
+  
+  
+  <h4 id="Terminal_Gui_View_LayoutStarted" data-uid="Terminal.Gui.View.LayoutStarted">LayoutStarted</h4>
+  <div class="markdown level1 summary">
+Fired after the Views&apos;s <a class="xref" href="Terminal.Gui.View.html#Terminal_Gui_View_LayoutSubviews">LayoutSubviews()</a> method has completed. 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.LayoutEventArgs&gt; LayoutStarted</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.LayoutEventArgs.html">View.LayoutEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Terminal_Gui_View_LayoutStarted_remarks">Remarks</h5>
+  <div class="markdown level1 remarks">
+Subscribe to this event to perform tasks when the <a class="xref" href="Terminal.Gui.View.html">View</a> has been resized or the layout has otherwise changed.
+</div>
+  
+  
+  <h4 id="Terminal_Gui_View_Leave" data-uid="Terminal.Gui.View.Leave">Leave</h4>
+  <div class="markdown level1 summary">
+Event fired when the view looses focus.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.FocusEventArgs&gt; Leave</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.FocusEventArgs.html">View.FocusEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_MouseClick" data-uid="Terminal.Gui.View.MouseClick">MouseClick</h4>
+  <div class="markdown level1 summary">
+Event fired when a mouse event is generated.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.MouseEventArgs&gt; MouseClick</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_MouseEnter" data-uid="Terminal.Gui.View.MouseEnter">MouseEnter</h4>
+  <div class="markdown level1 summary">
+Event fired when the view receives the mouse event for the first time.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.MouseEventArgs&gt; MouseEnter</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_MouseLeave" data-uid="Terminal.Gui.View.MouseLeave">MouseLeave</h4>
+  <div class="markdown level1 summary">
+Event fired when the view receives a mouse event for the last time.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View.MouseEventArgs&gt; MouseLeave</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.MouseEventArgs.html">View.MouseEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <h4 id="Terminal_Gui_View_Removed" data-uid="Terminal.Gui.View.Removed">Removed</h4>
+  <div class="markdown level1 summary">
+Event fired when a subview is being removed from this view.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event Action&lt;View&gt; Removed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Action</span>&lt;<a class="xref" href="Terminal.Gui.View.html">View</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.IDisposable</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IEnumerable</span>
   </div>
   <div>
       <span class="xref">System.ComponentModel.ISupportInitializeNotification</span>
@@ -3129,7 +3387,8 @@ This derived from <span class="xref">System.ComponentModel.ISupportInitializeNot
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

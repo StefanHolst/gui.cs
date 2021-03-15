@@ -6,7 +6,7 @@ using System.Linq;
 using Terminal.Gui;
 using Xunit;
 
-// Alais Console to MockConsole so we don't accidentally use Console
+// Alias Console to MockConsole so we don't accidentally use Console
 using Console = Terminal.Gui.FakeConsole;
 
 namespace Terminal.Gui {
@@ -27,15 +27,14 @@ namespace Terminal.Gui {
 			Assert.Null (r.ColorScheme);
 			Assert.Equal (Dim.Sized (0), r.Width);
 			Assert.Equal (Dim.Sized (0), r.Height);
-			// BUGBUG: Pos needs eqality implemented
-			//Assert.Equal (Pos.At (0), r.X);
-			//Assert.Equal (Pos.At (0), r.Y);
+			// FIXED: Pos needs equality implemented
+			Assert.Equal (Pos.At (0), r.X);
+			Assert.Equal (Pos.At (0), r.Y);
 			Assert.False (r.IsCurrentTop);
 			Assert.Empty (r.Id);
 			Assert.Empty (r.Subviews);
 			Assert.False (r.WantContinuousButtonPressed);
 			Assert.False (r.WantMousePositionReports);
-			Assert.Null (r.GetEnumerator().Current);
 			Assert.Null (r.SuperView);
 			Assert.Null (r.MostFocused);
 
@@ -59,12 +58,11 @@ namespace Terminal.Gui {
 			Assert.Empty (r.Subviews);
 			Assert.False (r.WantContinuousButtonPressed);
 			Assert.False (r.WantMousePositionReports);
-			Assert.Null (r.GetEnumerator ().Current);
 			Assert.Null (r.SuperView);
 			Assert.Null (r.MostFocused);
 
 			// Rect with values
-			r = new View (new Rect(1, 2, 3, 4));
+			r = new View (new Rect (1, 2, 3, 4));
 			Assert.NotNull (r);
 			Assert.Equal (LayoutStyle.Absolute, r.LayoutStyle);
 			Assert.Equal ("View()({X=1,Y=2,Width=3,Height=4})", r.ToString ());
@@ -83,7 +81,6 @@ namespace Terminal.Gui {
 			Assert.Empty (r.Subviews);
 			Assert.False (r.WantContinuousButtonPressed);
 			Assert.False (r.WantMousePositionReports);
-			Assert.Null (r.GetEnumerator ().Current);
 			Assert.Null (r.SuperView);
 			Assert.Null (r.MostFocused);
 
@@ -115,7 +112,7 @@ namespace Terminal.Gui {
 			var sub1 = new View ();
 			root.Add (sub1);
 			var sub2 = new View ();
-			sub1.Width = Dim.Width(sub2);
+			sub1.Width = Dim.Width (sub2);
 
 			Assert.Throws<InvalidOperationException> (() => root.LayoutSubviews ());
 
@@ -547,11 +544,11 @@ namespace Terminal.Gui {
 		[Fact]
 		public void Initialized_Event_Comparing_With_Added_Event ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = new Toplevel () { Id = "0", };
 
-			var w = new Window () {Id = "t", Width = Dim.Fill (), Height = Dim.Fill () };
+			var w = new Window () { Id = "t", Width = Dim.Fill (), Height = Dim.Fill () };
 			var v1 = new View () { Id = "v1", Width = Dim.Fill (), Height = Dim.Fill () };
 			var v2 = new View () { Id = "v2", Width = Dim.Fill (), Height = Dim.Fill () };
 			var sv1 = new View () { Id = "sv1", Width = Dim.Fill (), Height = Dim.Fill () };
@@ -578,10 +575,10 @@ namespace Terminal.Gui {
 			t.Initialized += (s, e) => {
 				tc++;
 				Assert.Equal (1, tc);
-				Assert.Equal (0, wc);
-				Assert.Equal (0, v1c);
-				Assert.Equal (0, v2c);
-				Assert.Equal (0, sv1c);
+				Assert.Equal (1, wc);
+				Assert.Equal (1, v1c);
+				Assert.Equal (1, v2c);
+				Assert.Equal (1, sv1c);
 
 				Assert.True (t.CanFocus);
 				Assert.True (w.CanFocus);
@@ -611,8 +608,8 @@ namespace Terminal.Gui {
 				Assert.Equal (t.Frame.Width, sv1.Frame.Width);
 				Assert.Equal (t.Frame.Height, sv1.Frame.Height);
 				Assert.False (sv1.CanFocus);
-				sv1.CanFocus = true;
-				Assert.True (sv1.CanFocus);
+				Assert.Throws<InvalidOperationException> (() => sv1.CanFocus = true);
+				Assert.False (sv1.CanFocus);
 			};
 
 			v1.Add (sv1);
@@ -637,13 +634,16 @@ namespace Terminal.Gui {
 			Assert.True (w.CanFocus);
 			Assert.False (v1.CanFocus);
 			Assert.False (v2.CanFocus);
-			Assert.True (sv1.CanFocus);
+			Assert.False (sv1.CanFocus);
+
+			v1.CanFocus = true;
+			Assert.False (sv1.CanFocus); // False because sv1 was disposed and it isn't a subview of v1.
 		}
 
 		[Fact]
 		public void Initialized_Event_Will_Be_Invoked_When_Added_Dynamically ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = new Toplevel () { Id = "0", };
 
@@ -656,10 +656,10 @@ namespace Terminal.Gui {
 			t.Initialized += (s, e) => {
 				tc++;
 				Assert.Equal (1, tc);
-				Assert.Equal (0, wc);
-				Assert.Equal (0, v1c);
-				Assert.Equal (0, v2c);
-				Assert.Equal (0, sv1c);
+				Assert.Equal (1, wc);
+				Assert.Equal (1, v1c);
+				Assert.Equal (1, v2c);
+				Assert.Equal (0, sv1c); // Added after t in the Application.Iteration.
 
 				Assert.True (t.CanFocus);
 				Assert.True (w.CanFocus);
@@ -694,8 +694,8 @@ namespace Terminal.Gui {
 					Assert.NotEqual (t.Frame.Width, sv1.Frame.Width);
 					Assert.NotEqual (t.Frame.Height, sv1.Frame.Height);
 					Assert.False (sv1.CanFocus);
-					sv1.CanFocus = true;
-					Assert.True (sv1.CanFocus);
+					Assert.Throws<InvalidOperationException> (() => sv1.CanFocus = true);
+					Assert.False (sv1.CanFocus);
 				};
 
 				v1.Add (sv1);
@@ -751,7 +751,7 @@ namespace Terminal.Gui {
 		[Fact]
 		public void CanFocus_Faced_With_Container_Before_Run ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = Application.Top;
 
@@ -788,7 +788,7 @@ namespace Terminal.Gui {
 		[Fact]
 		public void CanFocus_Faced_With_Container_After_Run ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = Application.Top;
 
@@ -813,7 +813,11 @@ namespace Terminal.Gui {
 				Assert.False (f.CanFocus);
 				Assert.False (v.CanFocus);
 
-				v.CanFocus = true;
+				Assert.Throws<InvalidOperationException> (() => v.CanFocus = true);
+				Assert.False (f.CanFocus);
+				Assert.False (v.CanFocus);
+
+				f.CanFocus = true;
 				Assert.True (f.CanFocus);
 				Assert.True (v.CanFocus);
 			};
@@ -827,7 +831,7 @@ namespace Terminal.Gui {
 		[Fact]
 		public void CanFocus_Container_ToFalse_Turns_All_Subviews_ToFalse_Too ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = Application.Top;
 
@@ -862,7 +866,7 @@ namespace Terminal.Gui {
 		[Fact]
 		public void CanFocus_Container_Toggling_All_Subviews_To_Old_Value_When_Is_True ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = Application.Top;
 
@@ -900,10 +904,31 @@ namespace Terminal.Gui {
 			Application.Shutdown ();
 		}
 
+
+		[Fact]
+		public void Navigation_With_Null_Focused_View ()
+		{
+			// Non-regression test for #882 (NullReferenceException during keyboard navigation when Focused is null)
+
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
+
+			Application.Top.Ready += () => {
+				Assert.Null (Application.Top.Focused);
+			};
+
+			// Keyboard navigation with tab
+			Console.MockKeyPresses.Push (new ConsoleKeyInfo ('\t', ConsoleKey.Tab, false, false, false));
+
+			Application.Iteration += () => Application.RequestStop ();
+
+			Application.Run ();
+			Application.Shutdown ();
+		}
+
 		[Fact]
 		public void Multi_Thread_Toplevels ()
 		{
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var t = Application.Top;
 			var w = new Window ();
@@ -945,17 +970,12 @@ namespace Terminal.Gui {
 				return true;
 			});
 
-			t.Ready = () => {
-				FirstDialogToplevel ();
-			};
+			t.Ready += FirstDialogToplevel;
 
 			void FirstDialogToplevel ()
 			{
-				var od = new OpenDialog {
-					Ready = () => {
-						SecoundDialogToplevel ();
-					}
-				};
+				var od = new OpenDialog();
+				od.Ready += SecoundDialogToplevel;
 
 				Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (100), (_) => {
 					count1++;
@@ -998,6 +1018,96 @@ namespace Terminal.Gui {
 
 			Application.Run ();
 			Application.Shutdown ();
+		}
+
+		[Fact]
+		public void View_Difference_Between_An_Object_Initializer_And_A_Constructor ()
+		{
+			// Object Initializer
+			var view = new View () {
+				X = 1,
+				Y = 2,
+				Width = 3,
+				Height = 4
+			};
+			Assert.Equal (1, view.X);
+			Assert.Equal (2, view.Y);
+			Assert.Equal (3, view.Width);
+			Assert.Equal (4, view.Height);
+			Assert.True (view.Frame.IsEmpty);
+			Assert.True (view.Bounds.IsEmpty);
+
+			view.LayoutSubviews ();
+
+			Assert.Equal (1, view.X);
+			Assert.Equal (2, view.Y);
+			Assert.Equal (3, view.Width);
+			Assert.Equal (4, view.Height);
+			Assert.False (view.Frame.IsEmpty);
+			Assert.False (view.Bounds.IsEmpty);
+
+			// Default Constructor
+			view = new View ();
+			Assert.Equal (0, view.X);
+			Assert.Equal (0, view.Y);
+			Assert.Equal (0, view.Width);
+			Assert.Equal (0, view.Height);
+			Assert.True (view.Frame.IsEmpty);
+			Assert.True (view.Bounds.IsEmpty);
+
+			// Constructor
+			view = new View (1, 2, "");
+			Assert.Null (view.X);
+			Assert.Null (view.Y);
+			Assert.Null (view.Width);
+			Assert.Null (view.Height);
+			Assert.False (view.Frame.IsEmpty);
+			Assert.True (view.Bounds.IsEmpty);
+
+			// Default Constructor and post assignment equivalent to Object Initializer
+			view = new View ();
+			view.X = 1;
+			view.Y = 2;
+			view.Width = 3;
+			view.Height = 4;
+			Assert.Equal (1, view.X);
+			Assert.Equal (2, view.Y);
+			Assert.Equal (3, view.Width);
+			Assert.Equal (4, view.Height);
+			Assert.True (view.Frame.IsEmpty);
+			Assert.True (view.Bounds.IsEmpty);
+		}
+
+		[Fact]
+		public void FocusNearestView_Ensure_Focus_Ordered ()
+		{
+			var top = new Toplevel ();
+
+			var win = new Window ();
+			var winSubview = new View ("WindowSubview") {
+				CanFocus = true
+			};
+			win.Add (winSubview);
+			top.Add (win);
+
+			var frm = new FrameView ();
+			var frmSubview = new View ("FrameSubview") {
+				CanFocus = true
+			};
+			frm.Add (frmSubview);
+			top.Add (frm);
+
+			top.ProcessKey (new KeyEvent (Key.Tab, new KeyModifiers ()));
+			Assert.Equal ($"WindowSubview", top.MostFocused.Text);
+			top.ProcessKey (new KeyEvent (Key.Tab, new KeyModifiers ()));
+			Assert.Equal ("FrameSubview", top.MostFocused.Text);
+			top.ProcessKey (new KeyEvent (Key.Tab, new KeyModifiers ()));
+			Assert.Equal ($"WindowSubview", top.MostFocused.Text);
+
+			top.ProcessKey (new KeyEvent (Key.BackTab | Key.ShiftMask, new KeyModifiers ()));
+			Assert.Equal ("FrameSubview", top.MostFocused.Text);
+			top.ProcessKey (new KeyEvent (Key.BackTab | Key.ShiftMask, new KeyModifiers ()));
+			Assert.Equal ($"WindowSubview", top.MostFocused.Text);
 		}
 	}
 }

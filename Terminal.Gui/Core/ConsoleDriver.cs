@@ -61,9 +61,9 @@ namespace Terminal.Gui {
 		/// </summary>
 		BrightGreen,
 		/// <summary>
-		/// The brigh cyan color.
+		/// The bright cyan color.
 		/// </summary>
-		BrighCyan,
+		BrightCyan,
 		/// <summary>
 		/// The bright red color.
 		/// </summary>
@@ -91,9 +91,18 @@ namespace Terminal.Gui {
 	///   class to define color schemes that can be used in your application.
 	/// </remarks>
 	public struct Attribute {
-		internal int value;
-		internal Color foreground;
-		internal Color background;
+		/// <summary>
+		/// The color attribute value.
+		/// </summary>
+		public int Value { get; }
+		/// <summary>
+		/// The foreground color.
+		/// </summary>
+		public Color Foreground { get; }
+		/// <summary>
+		/// The background color.
+		/// </summary>
+		public Color Background { get; }
 
 		/// <summary>
 		/// The current foreground color.
@@ -121,9 +130,9 @@ namespace Terminal.Gui {
 		/// <param name="background">Background</param>
 		public Attribute (int value, Color foreground = new Color (), Color background = new Color ())
 		{
-			this.value = value;
-			this.foreground = foreground;
-			this.background = background;
+			Value = value;
+			Foreground = foreground;
+			Background = background;
 		}
 
 		/// <summary>
@@ -133,9 +142,9 @@ namespace Terminal.Gui {
 		/// <param name="background">Background</param>
 		public Attribute (Color foreground = new Color (), Color background = new Color ())
 		{
-			this.value = value = ((int)foreground | (int)background << 4);
-			this.foreground = foreground;
-			this.background = background;
+			Value = (int)foreground | ((int)background << 4);
+			Foreground = foreground;
+			Background = background;
 		}
 
 		/// <summary>
@@ -143,7 +152,7 @@ namespace Terminal.Gui {
 		/// </summary>
 		/// <returns>The integer value stored in the attribute.</returns>
 		/// <param name="c">The attribute to convert</param>
-		public static implicit operator int (Attribute c) => c.value;
+		public static implicit operator int (Attribute c) => c.Value;
 
 		/// <summary>
 		/// Implicitly convert an integer value into an <see cref="Attribute"/>
@@ -163,6 +172,17 @@ namespace Terminal.Gui {
 			if (Application.Driver == null)
 				throw new InvalidOperationException ("The Application has not been initialized");
 			return Application.Driver.MakeAttribute (foreground, background);
+		}
+
+		/// <summary>
+		/// Gets the current <see cref="Attribute"/> from the driver.
+		/// </summary>
+		/// <returns>The current attribute.</returns>
+		public static Attribute Get ()
+		{
+			if (Application.Driver == null)
+				throw new InvalidOperationException ("The Application has not been initialized");
+			return Application.Driver.GetAttribute ();
 		}
 	}
 
@@ -219,18 +239,18 @@ namespace Terminal.Gui {
 			case "TopLevel":
 				switch (callerMemberName) {
 				case "Normal":
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
 					break;
 				case "Focus":
-					HotFocus = Application.Driver.MakeAttribute (HotFocus.foreground, attribute.background);
+					HotFocus = Application.Driver.MakeAttribute (HotFocus.Foreground, attribute.Background);
 					break;
 				case "HotNormal":
-					HotFocus = Application.Driver.MakeAttribute (attribute.foreground, HotFocus.background);
+					HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, HotFocus.Background);
 					break;
 				case "HotFocus":
-					HotNormal = Application.Driver.MakeAttribute (attribute.foreground, HotNormal.background);
-					if (Focus.foreground != attribute.background)
-						Focus = Application.Driver.MakeAttribute (Focus.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (attribute.Foreground, HotNormal.Background);
+					if (Focus.Foreground != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (Focus.Foreground, attribute.Background);
 					break;
 				}
 				break;
@@ -238,19 +258,19 @@ namespace Terminal.Gui {
 			case "Base":
 				switch (callerMemberName) {
 				case "Normal":
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
 					break;
 				case "Focus":
-					HotFocus = Application.Driver.MakeAttribute (HotFocus.foreground, attribute.background);
+					HotFocus = Application.Driver.MakeAttribute (HotFocus.Foreground, attribute.Background);
 					break;
 				case "HotNormal":
-					HotFocus = Application.Driver.MakeAttribute (attribute.foreground, HotFocus.background);
-					Normal = Application.Driver.MakeAttribute (Normal.foreground, attribute.background);
+					HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, HotFocus.Background);
+					Normal = Application.Driver.MakeAttribute (Normal.Foreground, attribute.Background);
 					break;
 				case "HotFocus":
-					HotNormal = Application.Driver.MakeAttribute (attribute.foreground, HotNormal.background);
-					if (Focus.foreground != attribute.background)
-						Focus = Application.Driver.MakeAttribute (Focus.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (attribute.Foreground, HotNormal.Background);
+					if (Focus.Foreground != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (Focus.Foreground, attribute.Background);
 					break;
 				}
 				break;
@@ -258,57 +278,56 @@ namespace Terminal.Gui {
 			case "Menu":
 				switch (callerMemberName) {
 				case "Normal":
-					if (Focus.background != attribute.background)
-						Focus = Application.Driver.MakeAttribute (attribute.foreground, Focus.background);
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
-					Disabled = Application.Driver.MakeAttribute (Disabled.foreground, attribute.background);
+					if (Focus.Background != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (attribute.Foreground, Focus.Background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
+					Disabled = Application.Driver.MakeAttribute (Disabled.Foreground, attribute.Background);
 					break;
 				case "Focus":
-					Normal = Application.Driver.MakeAttribute (attribute.foreground, Normal.background);
-					HotFocus = Application.Driver.MakeAttribute (HotFocus.foreground, attribute.background);
+					Normal = Application.Driver.MakeAttribute (attribute.Foreground, Normal.Background);
+					HotFocus = Application.Driver.MakeAttribute (HotFocus.Foreground, attribute.Background);
 					break;
 				case "HotNormal":
-					if (Focus.background != attribute.background)
-						HotFocus = Application.Driver.MakeAttribute (attribute.foreground, HotFocus.background);
-					Normal = Application.Driver.MakeAttribute (Normal.foreground, attribute.background);
-					Disabled = Application.Driver.MakeAttribute (Disabled.foreground, attribute.background);
+					if (Focus.Background != attribute.Background)
+						HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, HotFocus.Background);
+					Normal = Application.Driver.MakeAttribute (Normal.Foreground, attribute.Background);
+					Disabled = Application.Driver.MakeAttribute (Disabled.Foreground, attribute.Background);
 					break;
 				case "HotFocus":
-					HotNormal = Application.Driver.MakeAttribute (attribute.foreground, HotNormal.background);
-					if (Focus.foreground != attribute.background)
-						Focus = Application.Driver.MakeAttribute (Focus.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (attribute.Foreground, HotNormal.Background);
+					if (Focus.Foreground != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (Focus.Foreground, attribute.Background);
 					break;
 				case "Disabled":
-					if (Focus.background != attribute.background)
-						HotFocus = Application.Driver.MakeAttribute (attribute.foreground, HotFocus.background);
-					Normal = Application.Driver.MakeAttribute (Normal.foreground, attribute.background);
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
+					if (Focus.Background != attribute.Background)
+						HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, HotFocus.Background);
+					Normal = Application.Driver.MakeAttribute (Normal.Foreground, attribute.Background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
 					break;
-
 				}
 				break;
 
 			case "Dialog":
 				switch (callerMemberName) {
 				case "Normal":
-					if (Focus.background != attribute.background)
-						Focus = Application.Driver.MakeAttribute (attribute.foreground, Focus.background);
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
+					if (Focus.Background != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (attribute.Foreground, Focus.Background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
 					break;
 				case "Focus":
-					Normal = Application.Driver.MakeAttribute (attribute.foreground, Normal.background);
-					HotFocus = Application.Driver.MakeAttribute (HotFocus.foreground, attribute.background);
+					Normal = Application.Driver.MakeAttribute (attribute.Foreground, Normal.Background);
+					HotFocus = Application.Driver.MakeAttribute (HotFocus.Foreground, attribute.Background);
 					break;
 				case "HotNormal":
-					if (Focus.background != attribute.background)
-						HotFocus = Application.Driver.MakeAttribute (attribute.foreground, HotFocus.background);
-					if (Normal.foreground != attribute.background)
-						Normal = Application.Driver.MakeAttribute (Normal.foreground, attribute.background);
+					if (Focus.Background != attribute.Background)
+						HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, HotFocus.Background);
+					if (Normal.Foreground != attribute.Background)
+						Normal = Application.Driver.MakeAttribute (Normal.Foreground, attribute.Background);
 					break;
 				case "HotFocus":
-					HotNormal = Application.Driver.MakeAttribute (attribute.foreground, HotNormal.background);
-					if (Focus.foreground != attribute.background)
-						Focus = Application.Driver.MakeAttribute (Focus.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (attribute.Foreground, HotNormal.Background);
+					if (Focus.Foreground != attribute.Background)
+						Focus = Application.Driver.MakeAttribute (Focus.Foreground, attribute.Background);
 					break;
 				}
 				break;
@@ -316,17 +335,16 @@ namespace Terminal.Gui {
 			case "Error":
 				switch (callerMemberName) {
 				case "Normal":
-					HotNormal = Application.Driver.MakeAttribute (HotNormal.foreground, attribute.background);
-					HotFocus = Application.Driver.MakeAttribute (HotFocus.foreground, attribute.background);
+					HotNormal = Application.Driver.MakeAttribute (HotNormal.Foreground, attribute.Background);
+					HotFocus = Application.Driver.MakeAttribute (HotFocus.Foreground, attribute.Background);
 					break;
 				case "HotNormal":
 				case "HotFocus":
-					HotFocus = Application.Driver.MakeAttribute (attribute.foreground, attribute.background);
-					Normal = Application.Driver.MakeAttribute (Normal.foreground, attribute.background);
+					HotFocus = Application.Driver.MakeAttribute (attribute.Foreground, attribute.Background);
+					Normal = Application.Driver.MakeAttribute (Normal.Foreground, attribute.Background);
 					break;
 				}
 				break;
-
 			}
 			preparingScheme = false;
 			return attribute;
@@ -401,7 +419,7 @@ namespace Terminal.Gui {
 	public static class Colors {
 		static Colors ()
 		{
-			// Use reflection to dynamically create the default set of ColorSchemes from the list defiined 
+			// Use reflection to dynamically create the default set of ColorSchemes from the list defined 
 			// by the class. 
 			ColorSchemes = typeof (Colors).GetProperties ()
 				.Where (p => p.PropertyType == typeof (ColorScheme))
@@ -474,6 +492,64 @@ namespace Terminal.Gui {
 		/// Provides the defined <see cref="ColorScheme"/>s.
 		/// </summary>
 		public static Dictionary<string, ColorScheme> ColorSchemes { get; }
+	}
+
+	/// <summary>
+	/// Cursors Visibility that are displayed
+	/// </summary>
+	// 
+	// Hexa value are set as 0xAABBCCDD where :
+	//
+	//     AA stand for the TERMINFO DECSUSR parameter value to be used under Linux & MacOS
+	//     BB stand for the NCurses curs_set parameter value to be used under Linux & MacOS
+	//     CC stand for the CONSOLE_CURSOR_INFO.bVisible parameter value to be used under Windows
+	//     DD stand for the CONSOLE_CURSOR_INFO.dwSize parameter value to be used under Windows
+	//
+	public enum CursorVisibility {
+		/// <summary>
+		///	Cursor caret has default
+		/// </summary>
+		/// <remarks>Works under Xterm-like terminal otherwise this is equivalent to <see ref="Underscore"/>. This default directly depends of the XTerm user configuration settings so it could be Block, I-Beam, Underline with possible blinking.</remarks>
+		Default = 0x00010119,
+
+		/// <summary>
+		///	Cursor caret is hidden
+		/// </summary>
+		Invisible = 0x03000019,
+
+		/// <summary>
+		///	Cursor caret is normally shown as a blinking underline bar _
+		/// </summary>
+		Underline = 0x03010119,
+
+		/// <summary>
+		///	Cursor caret is normally shown as a underline bar _
+		/// </summary>
+		/// <remarks>Under Windows, this is equivalent to <see ref="UnderscoreBlinking"/></remarks>
+		UnderlineFix = 0x04010119,
+
+		/// <summary>
+		///	Cursor caret is displayed a blinking vertical bar |
+		/// </summary>
+		/// <remarks>Works under Xterm-like terminal otherwise this is equivalent to <see ref="Underscore"/></remarks>
+		Vertical = 0x05010119,
+
+		/// <summary>
+		///	Cursor caret is displayed a blinking vertical bar |
+		/// </summary>
+		/// <remarks>Works under Xterm-like terminal otherwise this is equivalent to <see ref="Underscore"/></remarks>
+		VerticalFix = 0x06010119,
+
+		/// <summary>
+		///	Cursor caret is displayed as a blinking block ▉
+		/// </summary>
+		Box = 0x01020164,
+
+		/// <summary>
+		///	Cursor caret is displayed a block ▉
+		/// </summary>
+		/// <remarks>Works under Xterm-like terminal otherwise this is equivalent to <see ref="Block"/></remarks>
+		BoxFix = 0x02020164,
 	}
 
 	///// <summary>
@@ -560,6 +636,17 @@ namespace Terminal.Gui {
 		/// </summary>
 		public abstract int Rows { get; }
 		/// <summary>
+		/// The current top in the terminal.
+		/// </summary>
+		public abstract int Top { get; }
+
+		/// <summary>
+		/// If false height is measured by the window height and thus no scrolling.
+		/// If true then height is measured by the buffer height, enabling scrolling.
+		/// </summary>
+		public abstract bool HeightAsBuffer { get; set; }
+
+		/// <summary>
 		/// Initializes the driver
 		/// </summary>
 		/// <param name="terminalResized">Method to invoke when the terminal is resized.</param>
@@ -583,20 +670,15 @@ namespace Terminal.Gui {
 		/// <returns></returns>
 		public static Rune MakePrintable (Rune c)
 		{
-			if (c <= 0x1F) {
-				// ASCII (C0) control characters. 
-				return new Rune (c + 0x2400);
-			} else if (c >= 0x80 && c <= 0x9F) {
+			if (c <= 0x1F || (c >= 0x80 && c <= 0x9F)) {
+				// ASCII (C0) control characters.
 				// C1 control characters (https://www.aivosto.com/articles/control-characters.html#c1)
-				return new Rune (0x25a1); // U+25A1, WHITE SQUARE, □: 
-			} else if (Rune.ColumnWidth (c) > 1) {
-				// BUGBUG: Until we figure out how to fix #41. Note this still doesn't help when 
-				// an Emoji or other char doesn't represent it's width correctly
-				return new Rune (0x25a1); // U+25A1, WHITE SQUARE, □: 
+				return new Rune (c + 0x2400);
 			} else {
 				return c;
 			}
 		}
+
 		/// <summary>
 		/// Adds the specified
 		/// </summary>
@@ -621,6 +703,26 @@ namespace Terminal.Gui {
 		/// Updates the location of the cursor position
 		/// </summary>
 		public abstract void UpdateCursor ();
+
+		/// <summary>
+		/// Retreive the cursor caret visibility
+		/// </summary>
+		/// <param name="visibility">The current <see cref="CursorVisibility"/></param>
+		/// <returns>true upon success</returns>
+		public abstract bool GetCursorVisibility (out CursorVisibility visibility);
+
+		/// <summary>
+		/// Change the cursor caret visibility
+		/// </summary>
+		/// <param name="visibility">The wished <see cref="CursorVisibility"/></param>
+		/// <returns>true upon success</returns>
+		public abstract bool SetCursorVisibility (CursorVisibility visibility);
+
+		/// <summary>
+		/// Ensure the cursor visibility
+		/// </summary>
+		/// <returns>true upon success</returns>
+		public abstract bool EnsureCursorVisibility ();
 
 		/// <summary>
 		/// Ends the execution of the console driver.
@@ -673,7 +775,7 @@ namespace Terminal.Gui {
 		/// <param name="paddingTop">Number of rows to pad on the top (if 0 the border and title will not appear on the top).</param>
 		/// <param name="paddingRight">Number of columns to pad on the right (if 0 the border will not appear on the right).</param>
 		/// <param name="paddingBottom">Number of rows to pad on the bottom (if 0 the border will not appear on the bottom).</param>
-		/// <param name="textAlignment">Not yet immplemented.</param>
+		/// <param name="textAlignment">Not yet implemented.</param>
 		/// <remarks></remarks>
 		public virtual void DrawWindowTitle (Rect region, ustring title, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom, TextAlignment textAlignment = TextAlignment.Left)
 		{
@@ -688,7 +790,7 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// Enables diagnostic funcions
+		/// Enables diagnostic functions
 		/// </summary>
 		[Flags]
 		public enum DiagnosticFlags : uint {
@@ -879,7 +981,7 @@ namespace Terminal.Gui {
 		/// <param name="region">Screen relative region where the frame will be drawn.</param>
 		/// <param name="padding">Padding to add on the sides.</param>
 		/// <param name="fill">If set to <c>true</c> it will clear the contents with the current color, otherwise the contents will be left untouched.</param>
-		/// <remarks>This API has been superceded by <see cref="DrawWindowFrame(Rect, int, int, int, int, bool, bool)"/>.</remarks>
+		/// <remarks>This API has been superseded by <see cref="DrawWindowFrame(Rect, int, int, int, int, bool, bool)"/>.</remarks>
 		/// <remarks>This API is equivalent to calling <c>DrawWindowFrame(Rect, p - 1, p - 1, p - 1, p - 1)</c>. In other words,
 		/// A padding value of 0 means there is actually a one cell border.
 		/// </remarks>
@@ -931,132 +1033,132 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// Horizontal line character.
 		/// </summary>
-		public Rune HLine;
+		public Rune HLine = '\u2500';
 
 		/// <summary>
 		/// Vertical line character.
 		/// </summary>
-		public Rune VLine;
+		public Rune VLine = '\u2502';
 
 		/// <summary>
 		/// Stipple pattern
 		/// </summary>
-		public Rune Stipple;
+		public Rune Stipple = '\u2591';
 
 		/// <summary>
 		/// Diamond character
 		/// </summary>
-		public Rune Diamond;
+		public Rune Diamond = '\u25ca';
 
 		/// <summary>
 		/// Upper left corner
 		/// </summary>
-		public Rune ULCorner;
+		public Rune ULCorner = '\u250C';
 
 		/// <summary>
 		/// Lower left corner
 		/// </summary>
-		public Rune LLCorner;
+		public Rune LLCorner = '\u2514';
 
 		/// <summary>
 		/// Upper right corner
 		/// </summary>
-		public Rune URCorner;
+		public Rune URCorner = '\u2510';
 
 		/// <summary>
 		/// Lower right corner
 		/// </summary>
-		public Rune LRCorner;
+		public Rune LRCorner = '\u2518';
 
 		/// <summary>
 		/// Left tee
 		/// </summary>
-		public Rune LeftTee;
+		public Rune LeftTee = '\u251c';
 
 		/// <summary>
 		/// Right tee
 		/// </summary>
-		public Rune RightTee;
+		public Rune RightTee = '\u2524';
 
 		/// <summary>
 		/// Top tee
 		/// </summary>
-		public Rune TopTee;
+		public Rune TopTee = '\u252c';
 
 		/// <summary>
 		/// The bottom tee.
 		/// </summary>
-		public Rune BottomTee;
+		public Rune BottomTee = '\u2534';
 
 		/// <summary>
 		/// Checkmark.
 		/// </summary>
-		public Rune Checked;
+		public Rune Checked = '\u221a';
 
 		/// <summary>
 		/// Un-checked checkmark.
 		/// </summary>
-		public Rune UnChecked;
+		public Rune UnChecked = '\u2574';
 
 		/// <summary>
 		/// Selected mark.
 		/// </summary>
-		public Rune Selected;
+		public Rune Selected = '\u25cf';
 
 		/// <summary>
 		/// Un-selected selected mark.
 		/// </summary>
-		public Rune UnSelected;
+		public Rune UnSelected = '\u25cc';
 
 		/// <summary>
 		/// Right Arrow.
 		/// </summary>
-		public Rune RightArrow;
+		public Rune RightArrow = '\u25ba';
 
 		/// <summary>
 		/// Left Arrow.
 		/// </summary>
-		public Rune LeftArrow;
+		public Rune LeftArrow = '\u25c4';
 
 		/// <summary>
 		/// Down Arrow.
 		/// </summary>
-		public Rune DownArrow;
+		public Rune DownArrow = '\u25bc';
 
 		/// <summary>
 		/// Up Arrow.
 		/// </summary>
-		public Rune UpArrow;
+		public Rune UpArrow = '\u25b2';
 
 		/// <summary>
 		/// Left indicator for default action (e.g. for <see cref="Button"/>).
 		/// </summary>
-		public Rune LeftDefaultIndicator;
+		public Rune LeftDefaultIndicator = '\u25e6';
 
 		/// <summary>
 		/// Right indicator for default action (e.g. for <see cref="Button"/>).
 		/// </summary>
-		public Rune RightDefaultIndicator;
+		public Rune RightDefaultIndicator = '\u25e6';
 
 		/// <summary>
 		/// Left frame/bracket (e.g. '[' for <see cref="Button"/>).
 		/// </summary>
-		public Rune LeftBracket;
+		public Rune LeftBracket = '[';
 
 		/// <summary>
 		/// Right frame/bracket (e.g. ']' for <see cref="Button"/>).
 		/// </summary>
-		public Rune RightBracket;
+		public Rune RightBracket = ']';
 
 		/// <summary>
 		/// On Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
 		/// </summary>
-		public Rune OnMeterSegment;
+		public Rune OnMeterSegment = '\u258c';
 
 		/// <summary>
 		/// Off Segment indicator for meter views (e.g. <see cref="ProgressBar"/>.
 		/// </summary>
-		public Rune OffMeterSegement;
+		public Rune OffMeterSegement = ' ';
 
 		/// <summary>
 		/// Make the attribute for the foreground and background colors.
@@ -1065,5 +1167,11 @@ namespace Terminal.Gui {
 		/// <param name="back">Background.</param>
 		/// <returns></returns>
 		public abstract Attribute MakeAttribute (Color fore, Color back);
+
+		/// <summary>
+		/// Gets the current <see cref="Attribute"/>.
+		/// </summary>
+		/// <returns>The current attribute.</returns>
+		public abstract Attribute GetAttribute ();
 	}
 }

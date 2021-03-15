@@ -5,7 +5,7 @@ using Terminal.Gui;
 using UICatalog;
 using Xunit;
 
-// Alais Console to MockConsole so we don't accidentally use Console
+// Alias Console to MockConsole so we don't accidentally use Console
 using Console = Terminal.Gui.FakeConsole;
 
 namespace Terminal.Gui {
@@ -32,18 +32,18 @@ namespace Terminal.Gui {
 		}
 
 		/// <summary>
-		/// This runs through all Sceanrios defined in UI Catalog, calling Init, Setup, and Run.
+		/// This runs through all Scenarios defined in UI Catalog, calling Init, Setup, and Run.
 		/// It puts a Ctrl-Q in the input queue so the Scenario immediately exits. 
 		/// Should find any egregious regressions.
 		/// </summary>
 		[Fact]
-		public void Run_All_Sceanrios ()
+		public void Run_All_Scenarios ()
 		{
 			List<Type> scenarioClasses = Scenario.GetDerivedClasses<Scenario> ();
 			Assert.NotEmpty (scenarioClasses);
 
 			foreach (var scenarioClass in scenarioClasses) {
-				// Setup some fake kepresses 
+				// Setup some fake keypresses 
 				// Passing empty string will cause just a ctrl-q to be fired
 				Console.MockKeyPresses.Clear ();
 				int stackSize = CreateInput ("");
@@ -55,7 +55,7 @@ namespace Terminal.Gui {
 						Application.RequestStop ();
 					}
 				};
-				Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+				Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 				var ms = 1000;
 				var abortCount = 0;
@@ -95,7 +95,7 @@ namespace Terminal.Gui {
 
 			var item = scenarioClasses.FindIndex (t => Scenario.ScenarioMetadata.GetName (t).Equals ("Generic", StringComparison.OrdinalIgnoreCase));
 			var scenarioClass = scenarioClasses[item];
-			// Setup some fake kepresses 
+			// Setup some fake keypresses 
 			// Passing empty string will cause just a ctrl-q to be fired
 			int stackSize = CreateInput ("");
 
@@ -107,7 +107,7 @@ namespace Terminal.Gui {
 					Application.RequestStop ();
 				}
 			};
-			Application.Init (new FakeDriver (), new NetMainLoop (() => FakeConsole.ReadKey (true)));
+			Application.Init (new FakeDriver (), new FakeMainLoop (() => FakeConsole.ReadKey (true)));
 
 			var ms = 1000;
 			var abortCount = 0;
@@ -119,7 +119,7 @@ namespace Terminal.Gui {
 			var token = Application.MainLoop.AddTimeout (TimeSpan.FromMilliseconds (ms), abortCallback);
 
 			Application.Top.KeyPress += (View.KeyEventEventArgs args) => {
-				Assert.Equal (Key.ControlQ, args.KeyEvent.Key);
+				Assert.Equal (Key.CtrlMask | Key.Q, args.KeyEvent.Key);
 			};
 
 			var scenario = (Scenario)Activator.CreateInstance (scenarioClass);

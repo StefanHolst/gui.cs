@@ -499,7 +499,7 @@ namespace Terminal.Gui {
 			return new DimAbsolute (n);
 		}
 
-		class DimCombine : Dim {
+		internal class DimCombine : Dim {
 			Dim left, right;
 			bool add;
 			public DimCombine (bool add, Dim left, Dim right)
@@ -518,6 +518,12 @@ namespace Terminal.Gui {
 				else
 					return la - ra;
 			}
+
+			public override string ToString ()
+			{
+				return $"Dim.Combine({left.ToString ()}{(add ? '+' : '-')}{right.ToString ()})";
+			}
+
 		}
 
 		/// <summary>
