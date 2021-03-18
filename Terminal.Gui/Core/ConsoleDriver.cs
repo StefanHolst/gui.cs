@@ -105,24 +105,6 @@ namespace Terminal.Gui {
 		public Color Background { get; }
 
 		/// <summary>
-		/// The current foreground color.
-		/// </summary>
-		public Color Foreground
-		{
-			get => foreground;
-			set => foreground = value;
-		}
-		
-		/// <summary>
-		/// The current background color.
-		/// </summary>
-		public Color Background
-		{
-			get => background;
-			set => background = value;
-		}
-
-		/// <summary>
 		/// Initializes a new instance of the <see cref="Attribute"/> struct.
 		/// </summary>
 		/// <param name="value">Value.</param>
