@@ -553,6 +553,7 @@ namespace Terminal.Gui {
 			VLine = Curses.ACS_VLINE;
 			Stipple = Curses.ACS_CKBOARD;
 			Diamond = Curses.ACS_DIAMOND;
+			Lozenge = '\u25CA';
 			ULCorner = Curses.ACS_ULCORNER;
 			LLCorner = Curses.ACS_LLCORNER;
 			URCorner = Curses.ACS_URCORNER;

@@ -949,6 +949,11 @@ namespace Terminal.Gui {
 		public Rune Diamond;
 
 		/// <summary>
+		/// Lozenge character
+		/// </summary>
+		public Rune Lozenge;
+		
+		/// <summary>
 		/// Upper left corner
 		/// </summary>
 		public Rune ULCorner;

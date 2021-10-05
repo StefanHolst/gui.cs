@@ -157,6 +157,7 @@ namespace Terminal.Gui {
 			VLine = '\u2502';
 			Stipple = '\u2592';
 			Diamond = '\u25c6';
+			Lozenge = '\u25CA';
 			ULCorner = '\u250C';
 			LLCorner = '\u2514';
 			URCorner = '\u2510';
