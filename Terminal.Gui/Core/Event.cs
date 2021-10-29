@@ -327,7 +327,7 @@ namespace Terminal.Gui {
 	/// Describes a keyboard event.
 	/// </summary>
 	public class KeyEvent {
-		KeyModifiers keyModifiers;
+		public KeyModifiers keyModifiers;
 
 		/// <summary>
 		/// Symb olid definition for the key.
