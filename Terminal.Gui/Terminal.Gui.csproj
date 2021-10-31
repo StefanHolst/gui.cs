@@ -22,8 +22,7 @@
   </ItemGroup>
   <!-- Uncomment the RestoreSources element to have dotnet restore pull NStack from a local dir for testing -->
   <PropertyGroup>
-    <!-- See https://stackoverflow.com/a/44463578/297526 -->
-    <!--<RestoreSources>$(RestoreSources);../../local-packages;https://api.nuget.org/v3/index.json</RestoreSources>-->
+      <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
   </PropertyGroup>
   <!-- API Documentation -->
   <ItemGroup>
@@ -54,7 +53,11 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
   <PropertyGroup>
-    <TargetFrameworks>net472;netstandard2.0;net6.0</TargetFrameworks>
+    <!-- See Terminal.Gui/README.md for how version numbering works -->
+    <!-- This enables prefixing version tags with v, e.g. v1.0.0 Instead of 1.0.0 -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Terminal.Gui</RootNamespace>
     <AssemblyName>Terminal.Gui</AssemblyName>
     <DocumentationFile>bin\Release\Terminal.Gui.xml</DocumentationFile>
