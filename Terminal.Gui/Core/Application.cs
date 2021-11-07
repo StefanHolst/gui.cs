@@ -936,6 +936,13 @@ namespace Terminal.Gui {
 			Driver.Refresh ();
 		}
 
+		public static void RefreshColorSchemes ()
+		{
+			foreach (var v in toplevels.Reverse ()) {
+				v.RefreshColorScheme ();
+			}
+		}
+
 		internal static void End (View view)
 		{
 			if (toplevels.Peek () != view)
