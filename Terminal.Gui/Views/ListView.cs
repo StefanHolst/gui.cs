@@ -1,4 +1,4 @@
-//
+﻿//
 // ListView.cs: ListView control
 //
 // Authors:
@@ -404,12 +404,7 @@ namespace Terminal.Gui {
 		/// <summary>
 		/// This event is raised when the selected item in the <see cref="ListView"/> has changed.
 		/// </summary>
-		public event Action<ListViewItemEventArgs> SelectedItemChanged;
-
-		protected void InvokeSelectedItemChanged (ListViewItemEventArgs e)
-		{
-			SelectedItemChanged?.Invoke (e);
-		}
+		public Action<ListViewItemEventArgs> SelectedItemChanged;
 
 		/// <summary>
 		/// This event is raised when the user Double Clicks on an item or presses ENTER to open the selected item.
