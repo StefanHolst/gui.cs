@@ -448,6 +448,8 @@ namespace Terminal.Gui {
 			return true;
 		}
 
+		public Action<bool, int> MarkUnmarkChanged;
+		
 		/// <summary>
 		/// Marks an unmarked row.
 		/// </summary>
@@ -457,6 +459,7 @@ namespace Terminal.Gui {
 			if (AllowsAll ()) {
 				Source.SetMark (SelectedItem, !Source.IsMarked (SelectedItem));
 				SetNeedsDisplay ();
+				MarkUnmarkChanged?.Invoke(Source.IsMarked (SelectedItem), SelectedItem);
 				return true;
 			}
 
