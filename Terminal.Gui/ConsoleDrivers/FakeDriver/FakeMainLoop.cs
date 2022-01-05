@@ -16,6 +16,7 @@ namespace Terminal.Gui {
 		ConsoleKeyInfo? keyResult = null;
 		MainLoop mainLoop;
 		Func<ConsoleKeyInfo> consoleKeyReaderFn = null;
+		public bool running = true;
 
 		/// <summary>
 		/// Invoked when a Key is pressed.
@@ -39,8 +40,8 @@ namespace Terminal.Gui {
 
 		void WindowsKeyReader ()
 		{
-			while (true) {
-				waitForProbe.WaitOne ();
+			while (running) {
+				waitForProbe.WaitOne (100);
 				keyResult = consoleKeyReaderFn ();
 				keyReady.Set ();
 			}
