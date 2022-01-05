@@ -785,9 +785,11 @@ namespace Terminal.Gui {
 			// Init created. Apps that do any threading will need to code defensively for this.
 			// e.g. see Issue #537
 			// TODO: Some of this state is actually related to Begin/End (not Init/Shutdown) and should be moved to `RunState` (#520)
-			foreach (var t in toplevels) {
-				t.Running = false;
-				t.Dispose ();
+			lock (toplevels) {
+				foreach (var t in toplevels) {
+					t.Running = false;
+					t.Dispose ();
+				}
 			}
 			toplevels.Clear ();
 			Current = null;
@@ -851,7 +853,8 @@ namespace Terminal.Gui {
 		{
 			if (toplevels.Peek () != view)
 				throw new ArgumentException ("The view that you end with must be balanced");
-			toplevels.Pop ();
+			lock(toplevels)
+				toplevels.Pop ();
 
 			(view as Toplevel)?.OnClosed ((Toplevel)view);
 
@@ -1036,14 +1039,11 @@ namespace Terminal.Gui {
 		{
 			var resume = true;
 			while (resume) {
-#if !DEBUG
 				try {
-#endif
-				resume = false;
-				var runToken = Begin (view);
-				RunLoop (runToken);
-				End (runToken);
-#if !DEBUG
+					resume = false;
+					var runToken = Begin (view);
+					RunLoop (runToken);
+					End (runToken);
 				}
 				catch (Exception error)
 				{
@@ -1053,7 +1053,6 @@ namespace Terminal.Gui {
 					}
 					resume = errorHandler(error);
 				}
-#endif
 			}
 		}
 
