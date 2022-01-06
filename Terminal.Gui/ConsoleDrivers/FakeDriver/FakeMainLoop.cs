@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Terminal.Gui {
 	/// <summary>
@@ -16,7 +17,6 @@ namespace Terminal.Gui {
 		ConsoleKeyInfo? keyResult = null;
 		MainLoop mainLoop;
 		Func<ConsoleKeyInfo> consoleKeyReaderFn = null;
-		public bool running = true;
 
 		/// <summary>
 		/// Invoked when a Key is pressed.
@@ -40,8 +40,8 @@ namespace Terminal.Gui {
 
 		void WindowsKeyReader ()
 		{
-			while (running) {
-				waitForProbe.WaitOne (100);
+			while (true) {
+				waitForProbe.WaitOne ();
 				keyResult = consoleKeyReaderFn ();
 				keyReady.Set ();
 			}
@@ -50,8 +50,7 @@ namespace Terminal.Gui {
 		void IMainLoopDriver.Setup (MainLoop mainLoop)
 		{
 			this.mainLoop = mainLoop;
-			Thread readThread = new Thread (WindowsKeyReader);
-			readThread.Start ();
+			Task.Run (WindowsKeyReader);
 		}
 
 		void IMainLoopDriver.Wakeup ()
