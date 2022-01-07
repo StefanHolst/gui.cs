@@ -566,6 +566,20 @@ namespace Terminal.Gui {
 			return hasColor;
 		}
 
+		public char [,] GetContent ()
+		{
+			var _content = new char [rows, cols];
+			
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
+					_content [r, c] = (char)Contents [r, c, 0];
+				}
+			}
+
+			return _content;
+		}
+		
+		
 		#region Unused
 		public override void UpdateCursor ()
 		{
