@@ -37,26 +37,6 @@ namespace Terminal.Gui {
 		/// </summary>
 		internal override int [,,] Contents => contents;
 
-		void UpdateOffscreen ()
-		{
-			int cols = Cols;
-			int rows = Rows;
-
-			contents = new int [rows, cols, 3];
-			for (int r = 0; r < rows; r++) {
-				for (int c = 0; c < cols; c++) {
-					contents [r, c, 0] = ' ';
-					contents [r, c, 1] = MakeColor (ConsoleColor.Gray, ConsoleColor.Black);
-					contents [r, c, 2] = 0;
-				}
-			}
-			dirtyLine = new bool [rows];
-			for (int row = 0; row < rows; row++)
-				dirtyLine [row] = true;
-		}
-
-		static bool sync = false;
-
 		public FakeDriver ()
 		{
 			if (RuntimeInformation.IsOSPlatform (OSPlatform.Windows)) {
@@ -94,27 +74,20 @@ namespace Terminal.Gui {
 
 		public override void AddRune (Rune rune)
 		{
-			rune = MakePrintable (rune);
-			if (Clip.Contains (ccol, crow)) {
-				if (needMove) {
-					//MockConsole.CursorLeft = ccol;
-					//MockConsole.CursorTop = crow;
-					needMove = false;
-				}
-				contents [crow, ccol, 0] = (int)(uint)rune;
-				contents [crow, ccol, 1] = currentAttribute;
-				contents [crow, ccol, 2] = 1;
-				dirtyLine [crow] = true;
-			} else
-				needMove = true;
-			ccol++;
-			//if (ccol == Cols) {
-			//	ccol = 0;
-			//	if (crow + 1 < Rows)
-			//		crow++;
-			//}
-			if (sync)
-				UpdateScreen ();
+			lock (contents) {
+				rune = MakePrintable (rune);
+				if (Clip.Contains (ccol, crow)) {
+					if (needMove) {
+						needMove = false;
+					}
+					contents [crow, ccol, 0] = (int)(uint)rune;
+					contents [crow, ccol, 1] = currentAttribute;
+					contents [crow, ccol, 2] = 1;
+					dirtyLine [crow] = true;
+				} else
+					needMove = true;
+				ccol++;
+			}
 		}
 
 		public override void AddStr (ustring str)
@@ -216,54 +189,57 @@ namespace Terminal.Gui {
 
 		public override void UpdateScreen ()
 		{
-			int top = Top;
-			int left = Left;
-			int rows = Math.Min (Console.WindowHeight + top, Rows);
-			int cols = Cols;
-
-			FakeConsole.CursorTop = 0;
-			FakeConsole.CursorLeft = 0;
-			for (int row = top; row < rows; row++) {
-				dirtyLine [row] = false;
-				for (int col = left; col < cols; col++) {
-					contents [row, col, 2] = 0;
-					var color = contents [row, col, 1];
-					if (color != redrawColor)
-						SetColor (color);
-					FakeConsole.Write ((char)contents [row, col, 0]);
-				}
-			}
+			// lock (contents) {
+			// 	int top = Top;
+			// 	int left = Left;
+			// 	int rows = Math.Min (Console.WindowHeight + top, Rows);
+			// 	int cols = Cols;
+			//
+			// 	FakeConsole.CursorTop = 0;
+			// 	FakeConsole.CursorLeft = 0;
+			// 	for (int row = top; row < rows; row++) {
+			// 		dirtyLine [row] = false;
+			// 		for (int col = left; col < cols; col++) {
+			// 			contents [row, col, 2] = 0;
+			// 			var color = contents [row, col, 1];
+			// 			if (color != redrawColor)
+			// 				SetColor (color);
+			// 			FakeConsole.Write ((char)contents [row, col, 0]);
+			// 		}
+			// 	}
+			// }
 		}
 
 		public override void Refresh ()
 		{
-			int rows = Rows;
-			int cols = Cols;
+			lock (contents) {
+				int rows = Rows;
+				int cols = Cols;
 
-			var savedRow = FakeConsole.CursorTop;
-			var savedCol = FakeConsole.CursorLeft;
-			for (int row = 0; row < rows; row++) {
-				if (!dirtyLine [row])
-					continue;
-				dirtyLine [row] = false;
-				for (int col = 0; col < cols; col++) {
-					if (contents [row, col, 2] != 1)
+				var savedRow = FakeConsole.CursorTop;
+				var savedCol = FakeConsole.CursorLeft;
+				for (int row = 0; row < rows; row++) {
+					if (!dirtyLine [row])
 						continue;
-
+					dirtyLine [row] = false;
 					FakeConsole.CursorTop = row;
-					FakeConsole.CursorLeft = col;
-					for (; col < cols && contents [row, col, 2] == 1; col++) {
+					
+					for (int col = 0; col < cols; col++) {
+						// if (contents [row, col, 2] != 1)
+						// 	continue;
+
 						var color = contents [row, col, 1];
 						if (color != redrawColor)
 							SetColor (color);
 
+						FakeConsole.CursorLeft = col;
 						FakeConsole.Write ((char)contents [row, col, 0]);
 						contents [row, col, 2] = 0;
 					}
 				}
+				FakeConsole.CursorTop = savedRow;
+				FakeConsole.CursorLeft = savedCol;
 			}
-			FakeConsole.CursorTop = savedRow;
-			FakeConsole.CursorLeft = savedCol;
 		}
 
 		Attribute currentAttribute;
@@ -536,12 +512,14 @@ namespace Terminal.Gui {
 		{
 			// Can raise an exception while is still resizing.
 			try {
-				for (int row = 0; row < rows; row++) {
-					for (int c = 0; c < cols; c++) {
-						contents [row, c, 0] = ' ';
-						contents [row, c, 1] = (ushort)Colors.TopLevel.Normal;
-						contents [row, c, 2] = 0;
-						dirtyLine [row] = true;
+				lock (contents) {
+					for (int row = 0; row < rows; row++) {
+						for (int c = 0; c < cols; c++) {
+							contents [row, c, 0] = ' ';
+							contents [row, c, 1] = (ushort)Colors.TopLevel.Normal;
+							contents [row, c, 2] = 0;
+							dirtyLine [row] = true;
+						}
 					}
 				}
 			} catch (IndexOutOfRangeException) { }
@@ -565,20 +543,6 @@ namespace Terminal.Gui {
 			}
 			return hasColor;
 		}
-
-		public char [,] GetContent ()
-		{
-			var _content = new char [rows, cols];
-			
-			for (int r = 0; r < rows; r++) {
-				for (int c = 0; c < cols; c++) {
-					_content [r, c] = (char)Contents [r, c, 0];
-				}
-			}
-
-			return _content;
-		}
-		
 		
 		#region Unused
 		public override void UpdateCursor ()

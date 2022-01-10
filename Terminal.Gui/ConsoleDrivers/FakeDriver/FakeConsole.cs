@@ -550,6 +550,11 @@ namespace Terminal.Gui {
 			SetCursorPosition (0, 0);
 		}
 
+		public static char[,] Get ()
+		{
+			return _buffer;
+		}
+		
 		static char [,] _buffer = new char [WindowWidth, WindowHeight];
 
 		//

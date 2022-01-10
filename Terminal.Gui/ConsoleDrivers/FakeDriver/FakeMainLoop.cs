@@ -55,6 +55,9 @@ namespace Terminal.Gui {
 
 		void IMainLoopDriver.Wakeup ()
 		{
+			// keyResult = consoleKeyReaderFn ();
+			// keyReady.Set ();
+			// waitForProbe.Set ();
 		}
 
 		bool IMainLoopDriver.EventsPending (bool wait)
