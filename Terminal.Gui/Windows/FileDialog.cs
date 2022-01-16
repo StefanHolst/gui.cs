@@ -96,12 +96,12 @@ namespace Terminal.Gui {
 
 		void Watcher_Error (object sender, ErrorEventArgs e)
 		{
-			Application.MainLoop.Invoke (() => Reload ());
+			Application.MainLoop?.Invoke (() => Reload ());
 		}
 
 		void Watcher_Changed (object sender, FileSystemEventArgs e)
 		{
-			Application.MainLoop.Invoke (() => Reload ());
+			Application.MainLoop?.Invoke (() => Reload ());
 		}
 
 		ustring directory;
