@@ -135,7 +135,7 @@ namespace Terminal.Gui {
 		{
 			switch (kb.Key) {
 			case Key.Esc:
-				Running = false;
+				Application.RequestStop ();
 				return true;
 			}
 			return base.ProcessKey (kb);
