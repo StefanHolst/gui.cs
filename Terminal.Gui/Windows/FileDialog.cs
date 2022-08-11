@@ -47,6 +47,12 @@ namespace Terminal.Gui {
 
 		internal bool Reload (ustring value = null)
 		{
+			if (watcher != null) {
+				// FileSystemWatchers are rooted to pinned objects
+				// so they must be disposed.
+				watcher.Dispose ();
+			}
+
 			bool valid = false;
 			try {
 				dirInfo = new DirectoryInfo (value == null ? directory.ToString () : value.ToString ());
