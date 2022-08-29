@@ -927,8 +927,9 @@ namespace Terminal.Gui {
 		/// Initializes a new instance of the <see cref="MenuBar"/> class with the specified set of toplevel menu items.
 		/// </summary>
 		/// <param name="menus">Individual menu items; a null item will result in a separator being drawn.</param>
-		public MenuBar (MenuBarItem [] menus) : base ()
+		public MenuBar (MenuBarItem [] menus, Key shortcut = Key.F9) : base ()
 		{
+			Shortcut = shortcut;
 			X = 0;
 			Y = 0;
 			Width = Dim.Fill ();
@@ -1691,7 +1692,7 @@ namespace Terminal.Gui {
 		///<inheritdoc/>
 		public override bool ProcessHotKey (KeyEvent kb)
 		{
-			if (kb.Key == Key.F9) {
+			if (kb.Key == Shortcut) {
 				if (!IsMenuOpen)
 					OpenMenu ();
 				else
