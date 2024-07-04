@@ -1449,8 +1449,8 @@ namespace Terminal.Gui {
 
 		public void RefreshColorScheme ()
 		{
-			if (ColorScheme?.caller != null) {
-				ColorScheme = Colors.ColorSchemes [ColorScheme.caller];
+			if (ColorScheme?.schemeBeingSet != null && Colors.ColorSchemes.TryGetValue(ColorScheme.schemeBeingSet, out var scheme)) {
+				ColorScheme = scheme;
 			}
 
 			if (subviews == null)
